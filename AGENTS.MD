@@ -30,9 +30,9 @@ Você está atuando como assistente de desenvolvimento para o **ZelaTech**, um s
 | Integrante | Papel | Responsabilidades no código |
 |:-----------|:------|:---------------------------|
 | **João Luiz** | Lead Architect / Back-end | Arquitetura MVC geral, Servlets (Controllers), integração entre camadas |
-| **Alexandre Hesse** | Front-end Developer | Views (JSP), estilização Tailwind CSS, usabilidade e responsividade |
-| **Andrey Kerges** | DBA / Model Layer | Modelagem do banco, scripts SQL (`/db/`), implementação dos DAOs (JDBC) |
-| **Vitor Augusto** | DevOps & QA | Configuração Tomcat/GitHub, testes, segurança e documentação |
+| **Andrey Kerges** | Front-end Developer | Views (JSP), estilização Tailwind CSS, usabilidade e responsividade |
+| **Vitor Augusto** | DBA / Model Layer | Modelagem do banco, scripts SQL (`/db/`), implementação dos DAOs (JDBC) |
+| **Alexandre Hesse** | DevOps & QA | Configuração Tomcat/GitHub, testes, segurança e documentação |
 
 ---
 
