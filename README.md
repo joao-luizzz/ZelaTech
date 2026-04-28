@@ -212,9 +212,9 @@ ZelaTech/
 
 Discentes da Fatec Praia Grande:
 - **João Luiz** - Arquitetura Back-end & Servlets
-- **Alexandre Hesse** - Front-end & JSPs
-- **Andrey Kerges** - Banco de Dados & DAOs
-- **Vitor Augusto** - Documentação & QA
+- **Alexandre Hesse** - DevOPS & QA
+- **Andrey Kerges** - Front-end & JSPs
+- **Vitor Augusto** - Banco de Dados & DAOs
 
 ---
 
