@@ -39,19 +39,19 @@ O projeto migrou para uma arquitetura baseada em **API RESTful** e **Single Page
 
 ## 🏗️ 3. Padrões de Arquitetura — Regras de Codificação
 
-### Controllers REST (`br.fatec.zelatech.backend.controllers`)
+### Controllers REST (`br.fatec.zelatech.backend.controller`)
 - Nomenclatura: `[Entidade]Controller.java`.
 - Responsabilidade: Anotados com `@RestController` e `@RequestMapping("/api/v1/...")`. Lidam puramente com HTTP Requests, validam payloads via `@Valid` (DTOs) e chamam os Services. Retornam `ResponseEntity`.
 
-### Services (`br.fatec.zelatech.backend.services`)
+### Services (`br.fatec.zelatech.backend.service`)
 - Nomenclatura: `[Entidade]Service.java`.
 - Responsabilidade: Anotados com `@Service`. Toda a lógica de negócio pesada, validações de domínio (ex: impedir status retroceder) e injeção de Repositories. Métodos de escrita anotados com `@Transactional`.
 
-### Repositories (`br.fatec.zelatech.backend.repositories`)
+### Repositories (`br.fatec.zelatech.backend.repository`)
 - Nomenclatura: `[Entidade]Repository.java`.
 - Responsabilidade: Interfaces que estendem `JpaRepository`. Proibido escrever JDBC manual.
 
-### DTOs (`br.fatec.zelatech.backend.dtos`)
+### DTOs (`br.fatec.zelatech.backend.dto`)
 - Nunca trafegar as entidades `@Entity` diretamente nas respostas ou requisições. Usar DTOs e Records.
 
 ---
@@ -67,7 +67,7 @@ Antes de gerar ou sugerir qualquer código, mentalmente verifique:
 | RBAC | As rotas sensíveis e métodos do Service estão protegidos por `@PreAuthorize("hasRole('SINDICO')")` ou configuração do `SecurityFilterChain`? |
 | Senhas | Nunca salvar ou trafegar senhas puras em logs ou na base de dados. `PasswordEncoder` (BCrypt) obrigatório. |
 | CORS | O Spring Boot está configurado via `WebMvcConfigurer` para aceitar requisições da porta do frontend (ex: localhost:5173)? |
-| JWT | O secret do JWT não deve estar hardcoded na classe, mas sim ler de variáveis de ambiente. |
+| JWT | O secret do JWT e senha do BD não devem estar hardcoded. Devem ser lidos do `.env` e carregados no `application.properties` com sintaxe `${VAR_NAME}`. |
 
 ---
 
@@ -76,16 +76,17 @@ Antes de gerar ou sugerir qualquer código, mentalmente verifique:
 ```
 backend/
 ├── src/main/java/br/fatec/zelatech/backend/
-│   ├── config/         # Configurações globais (CORS, Swagger)
-│   ├── controllers/    # Endpoints REST
-│   ├── dtos/           # Records ou classes de transferência de dados
-│   ├── models/         # Entidades mapeadas ao banco (@Entity)
-│   ├── repositories/   # Interfaces JpaRepository
+│   ├── config/         # Configurações globais (CORS, SecurityConfig, etc)
+│   ├── controller/     # Endpoints REST
+│   ├── dto/            # Records ou classes de transferência de dados
+│   ├── model/          # Entidades mapeadas ao banco (@Entity)
+│   ├── repository/     # Interfaces JpaRepository
 │   ├── security/       # Filtros JWT, serviços de autenticação
-│   ├── services/       # Lógica de negócios
+│   ├── service/        # Lógica de negócios
 │   └── BackendApplication.java
 └── src/main/resources/
-    └── application.properties  # Configuração de DB, JWT (não commitados credenciais ativas)
+    ├── application.properties          # Carrega credenciais do .env via ${VAR}
+    └── application.properties.example  # Template base (sem senhas reais)
 ```
 
 ---
