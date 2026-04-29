@@ -2,11 +2,11 @@
 
 ## 1. Arquitetura do Sistema
 
-O projeto utiliza o padrão **MVC (Model-View-Controller)** nativo do ecossistema Java Web:
+O projeto utiliza uma arquitetura **desacoplada**, separando completamente as responsabilidades entre frontend e backend:
 
-- **Model:** Classes POJO (entidades de domínio) e classes DAO (Data Access Object) com JDBC puro para persistência.
-- **View:** Páginas JSP com JSTL e Expression Language (EL). Estilização via Tailwind CSS. Proibido Scriptlets.
-- **Controller:** Servlets Jakarta EE para processar requisições HTTP, validar entradas e gerenciar fluxo de navegação.
+- **Backend (API RESTful):** Desenvolvido em Java com **Spring Boot**. Responsável pelas regras de negócio, persistência no banco de dados e autenticação via JWT (JSON Web Tokens). Ele fornece dados estruturados em formato JSON.
+- **Frontend (SPA - Single Page Application):** Desenvolvido com **React**. Responsável por toda a interface de usuário, navegação no lado do cliente (Client-side routing) e consumo da API.
+- **Persistência:** Utiliza **Spring Data JPA (Hibernate)** para mapeamento objeto-relacional e abstração de consultas no banco de dados MySQL.
 
 ---
 
@@ -15,12 +15,13 @@ O projeto utiliza o padrão **MVC (Model-View-Controller)** nativo do ecossistem
 | Camada | Tecnologia | Versão |
 |--------|-----------|--------|
 | Linguagem | Java | 17+ |
-| Container | Apache Tomcat | 10+ |
-| API Web | Jakarta Servlets | — |
-| Persistência | JDBC puro | — |
+| Framework Backend | Spring Boot | 3.x |
+| Segurança | Spring Security + JWT | — |
+| Persistência | Spring Data JPA (Hibernate) | — |
 | Banco de Dados | MySQL | 8.0+ |
-| View | JSP + JSTL | — |
-| Estilização | Tailwind CSS | 3.4 |
+| Framework Frontend | React (Vite ou Next.js) | 18+ |
+| Estilização | Tailwind CSS | 3.4+ |
+| Comunicação | Axios ou Fetch API | — |
 
 ---
 
@@ -33,7 +34,7 @@ O projeto utiliza o padrão **MVC (Model-View-Controller)** nativo do ecossistem
 | `id` | INT (PK, AUTO_INCREMENT) | Sim | — |
 | `nome` | VARCHAR(150) | Sim | — |
 | `email` | VARCHAR(150) UNIQUE | Sim | Usado como login |
-| `senha` | VARCHAR(255) | Sim | Hash SHA-256 |
+| `senha` | VARCHAR(255) | Sim | Hash BCrypt |
 | `apartamento` | VARCHAR(20) | Sim | Número da unidade |
 | `perfil` | ENUM('MORADOR','SINDICO') | Sim | Primeiro cadastro = SINDICO |
 
@@ -102,23 +103,30 @@ O projeto utiliza o padrão **MVC (Model-View-Controller)** nativo do ecossistem
 
 ---
 
-## 4. Endpoints e Mapeamentos de Servlet
+## 4. Endpoints da API REST
 
-| URL Pattern | Servlet | Método | Descrição |
-|-------------|---------|--------|-----------|
-| `/login` | `LoginServlet` | GET | Exibe formulário de login |
-| `/login` | `LoginServlet` | POST | Autentica usuário, cria `HttpSession` |
-| `/cadastro` | `CadastroServlet` | GET | Exibe formulário de cadastro |
-| `/cadastro` | `CadastroServlet` | POST | Registra novo usuário |
-| `/logout` | `LogoutServlet` | GET | Invalida sessão e redireciona para `/login` |
-| `/dashboard` | `DashboardServlet` | GET | Exibe mural de avisos (todos os perfis) |
-| `/chamados` | `ChamadoServlet` | GET | Listagem de chamados (morador: próprios; síndico: todos) |
-| `/chamados` | `ChamadoServlet` | POST | Abre novo chamado (Morador) |
-| `/chamados/detalhe` | `ChamadoDetalheServlet` | GET | Detalhe do chamado + histórico de status |
-| `/chamados/detalhe` | `ChamadoDetalheServlet` | POST | Atualiza status do chamado (Síndico) |
-| `/mural` | `MuralServlet` | GET | Lista avisos |
-| `/mural` | `MuralServlet` | POST | Cria novo aviso (Síndico) |
-| `/mural/excluir` | `MuralServlet` | POST | Exclui aviso (Síndico) |
+A comunicação entre React e Spring Boot ocorrerá estritamente através destes endpoints JSON:
+
+### Autenticação
+| Endpoint | Método | Descrição | Autenticação |
+|----------|--------|-----------|--------------|
+| `/api/v1/auth/login` | POST | Autentica usuário e retorna JWT | Pública |
+| `/api/v1/auth/cadastro` | POST | Registra novo usuário | Pública |
+
+### Avisos (Mural)
+| Endpoint | Método | Descrição | Autenticação |
+|----------|--------|-----------|--------------|
+| `/api/v1/avisos` | GET | Lista todos os avisos | Todos |
+| `/api/v1/avisos` | POST | Cria um novo aviso | Apenas Síndico |
+| `/api/v1/avisos/{id}` | DELETE | Exclui um aviso | Apenas Síndico |
+
+### Chamados
+| Endpoint | Método | Descrição | Autenticação |
+|----------|--------|-----------|--------------|
+| `/api/v1/chamados` | GET | Lista chamados (Morador: próprios; Síndico: todos) | Todos |
+| `/api/v1/chamados` | POST | Abre novo chamado | Apenas Morador |
+| `/api/v1/chamados/{id}` | GET | Retorna detalhes do chamado e histórico | Todos |
+| `/api/v1/chamados/{id}/status` | PATCH | Atualiza status do chamado | Apenas Síndico |
 
 ---
 
@@ -128,23 +136,18 @@ O projeto utiliza o padrão **MVC (Model-View-Controller)** nativo do ecossistem
 ```
 ABERTO  →  EM_ANDAMENTO  →  RESOLVIDO
 ```
-- Unidirecional: retroceder é inválido e deve ser rejeitado no Servlet com erro HTTP 403 ou redirecionamento com mensagem de erro.
-- Toda transição persiste um registro em `historico_status` imediatamente após o UPDATE em `chamado`.
+- Unidirecional: O Spring impedirá qualquer transição inválida (ex: RESOLVIDO para EM_ANDAMENTO), retornando um status `400 Bad Request`.
+- Toda alteração de status gera automaticamente um registro em `HistoricoStatus` na mesma transação de banco (`@Transactional`).
 
-### Validações de Entrada
-| Campo | Regra |
-|-------|-------|
-| E-mail | Formato válido (`^[^@]+@[^@]+\.[^@]+`); único no banco |
-| Senha | Mínimo 6 caracteres |
-| Título (chamado/aviso) | Não vazio; máx. 100 caracteres |
-| Descrição | Não vazia; máx. 500 caracteres |
-| Conteúdo (aviso) | Não vazio; máx. 1000 caracteres |
-| Foto | MIME type: `image/jpeg` ou `image/png`; tamanho máx. 5MB; opcional |
+### Validações de Entrada (Spring Validation)
+- As validações de payload (JSON) serão feitas usando anotações como `@NotBlank`, `@Email`, `@Size` diretamente nos DTOs de Request.
+- Requisições inválidas retornarão HTTP `400 Bad Request` com a lista de erros.
 
-### Regras de Acesso (RBAC)
-- Servlet verifica `session.getAttribute("perfil")` em todo endpoint protegido.
-- Morador que tentar acessar endpoint de síndico recebe redirecionamento com mensagem de acesso negado.
-- Requisição sem sessão válida redireciona para `/login`.
+### Regras de Acesso (RBAC com Spring Security)
+- Configurações de rotas no SecurityFilterChain bloquearão acessos indevidos.
+- Anotações como `@PreAuthorize("hasRole('SINDICO')")` serão usadas nos endpoints sensíveis.
+- Tentativas não autenticadas retornarão `401 Unauthorized`.
+- Tentativas sem a Role (perfil) necessária retornarão `403 Forbidden`.
 
 ---
 
@@ -152,54 +155,68 @@ ABERTO  →  EM_ANDAMENTO  →  RESOLVIDO
 
 | Ameaça | Mitigação |
 |--------|-----------|
-| SQL Injection | `PreparedStatement` obrigatório em todos os DAOs |
-| XSS | `<c:out>` em todas as saídas de dados nas JSPs |
-| Senhas em plain text | Hash SHA-256 via `HashSenha.java` antes de persistir |
-| Upload malicioso | Validação de MIME type + tamanho; nome do arquivo gerado por UUID no servidor |
-| Directory Traversal | Path de upload construído com diretório fixo + UUID, nunca com o nome original |
-| Credenciais expostas | `config.properties` não versionado (`.gitignore`) |
-| Sessão não encerrada | `session.invalidate()` no logout |
+| SQL Injection | Prevenção nativa pelo Spring Data JPA e Hibernate. |
+| XSS | O React, por padrão, escapa todas as variáveis de estado no DOM. |
+| Senhas em plain text | Criptografia via `BCryptPasswordEncoder` antes de salvar. |
+| Sessão Sequestrada | JWT expirável (ex: validade de 2h). |
+| Cross-Origin Requests | Configuração de CORS explícita no Spring Boot para aceitar apenas requisições do domínio do frontend. |
 
 ---
 
 ## 7. Padrões de Código
 
-### DAO (JDBC)
+### Backend (Spring Boot)
+Uso padrão das camadas Controller, Service e Repository.
+
 ```java
-// Padrão obrigatório de try-with-resources
-public Chamado buscarPorId(int id) throws SQLException {
-    String sql = "SELECT * FROM chamado WHERE id = ?";
-    try (Connection conn = DatabaseConnection.getConnection();
-         PreparedStatement ps = conn.prepareStatement(sql)) {
-        ps.setInt(1, id);
-        try (ResultSet rs = ps.executeQuery()) {
-            if (rs.next()) {
-                return mapearChamado(rs);
-            }
-        }
+// Controller
+@RestController
+@RequestMapping("/api/v1/chamados")
+public class ChamadoController {
+    // ... endpoints, DTOs e ResponseEntity
+}
+
+// Service (Regras de Negócio)
+@Service
+public class ChamadoService {
+    @Transactional
+    public ChamadoResponseDTO atualizarStatus(Long id, StatusNovoDTO dto) {
+        // ... valida regra de status e salva histórico
     }
-    return null;
+}
+
+// Repository (Spring Data JPA)
+public interface ChamadoRepository extends JpaRepository<Chamado, Long> {
+    List<Chamado> findByUsuarioId(Long usuarioId);
 }
 ```
 
-### JSP (sem Scriptlets)
-```jsp
-<%-- CORRETO --%>
-<c:forEach var="chamado" items="${chamados}">
-    <td><c:out value="${chamado.titulo}"/></td>
-</c:forEach>
+### Frontend (React)
+Uso de hooks funcionais, consumo de API assíncrono e gerenciamento de estado local.
 
-<%-- PROIBIDO --%>
-<% for (Chamado c : chamados) { %>
-    <td><%= c.getTitulo() %></td>
-<% } %>
-```
+```javascript
+// Exemplo de componente React (consumindo a API)
+import { useEffect, useState } from 'react';
+import api from '../services/api'; // Axios configurado com token JWT
 
-### Upload de Foto
-```java
-// Nome do arquivo gerado pelo sistema, nunca o original do usuário
-String nomeArquivo = UUID.randomUUID().toString() + ".jpg";
-String uploadDir = getServletContext().getRealPath("/uploads/chamados/");
-Path destino = Paths.get(uploadDir, nomeArquivo); // sem concatenação insegura
-Files.copy(part.getInputStream(), destino);
+export function MuralAvisos() {
+    const [avisos, setAvisos] = useState([]);
+
+    useEffect(() => {
+        api.get('/api/v1/avisos')
+           .then(response => setAvisos(response.data))
+           .catch(error => console.error(error));
+    }, []);
+
+    return (
+        <div className="p-4">
+            {avisos.map(aviso => (
+                <div key={aviso.id} className="bg-white shadow p-4 rounded-md mb-4">
+                    <h2 className="text-xl font-bold">{aviso.titulo}</h2>
+                    <p>{aviso.conteudo}</p>
+                </div>
+            ))}
+        </div>
+    );
+}
 ```

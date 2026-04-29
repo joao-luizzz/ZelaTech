@@ -25,17 +25,16 @@
 
 | ID | Categoria | Descrição |
 |:---|:---|:---|
-| **RNF01** | Arquitetura | Implementação em Java OO (Servlets/JSP) seguindo o padrão MVC. Proibido uso de frameworks como Spring ou Hibernate. |
-| **RNF02** | Persistência | Banco de dados relacional MySQL 8+, acessado via JDBC puro com `PreparedStatement`. Proibido concatenação de strings em queries. |
-| **RNF03** | Interface | Design responsivo com HTML5, CSS3 e Tailwind CSS. Proibido Scriptlets JSP (`<% %>`); usar JSTL e Expression Language. |
+| **RNF01** | Arquitetura | Arquitetura desacoplada: Backend como API RESTful em Java (Spring Boot) e Frontend como SPA (ex: React). |
+| **RNF02** | Persistência | Banco de dados relacional MySQL 8+, acessado via Spring Data JPA / Hibernate. |
+| **RNF03** | Interface | Design responsivo com framework de Frontend (React) e estilização com Tailwind CSS. |
 | **RNF04** | Armazenamento de Arquivos | Fotos salvas no sistema de arquivos do servidor (`/uploads/chamados/`). O banco armazena apenas o path da imagem. Nome do arquivo gerado por UUID no servidor. |
-| **RNF05** | Segurança de Senhas | Senhas armazenadas exclusivamente como hash SHA-256. Nunca persistir ou logar senha em texto plano. |
-| **RNF06** | Prevenção de SQL Injection | Uso obrigatório de `PreparedStatement` em todas as operações de banco de dados. |
-| **RNF07** | Prevenção de XSS | Toda saída de dados em JSP deve usar `<c:out>` para escapar caracteres especiais. |
-| **RNF08** | Gestão de Sessão | Sessão gerenciada pelo servidor via `HttpSession`. Logout invalida a sessão com `session.invalidate()`. |
-| **RNF09** | Gerenciamento de Recursos JDBC | Uso obrigatório de `try-with-resources` para garantir fechamento de `Connection`, `PreparedStatement` e `ResultSet`. |
-| **RNF10** | Credenciais | Dados de conexão com o banco (URL, usuário, senha) armazenados em `config.properties`, nunca em código-fonte. O arquivo não deve ser versionado. |
-| **RNF11** | Compatibilidade | Funcionar nos navegadores Chrome e Firefox em suas versões atuais. |
+| **RNF05** | Segurança de Senhas | Senhas armazenadas exclusivamente como hash (ex: BCrypt via Spring Security). Nunca persistir ou logar senha em texto plano. |
+| **RNF06** | Prevenção de SQL Injection | Proteção garantida pelas APIs nativas do Spring Data JPA. |
+| **RNF07** | Prevenção de XSS | Proteção de saída de dados gerenciada nativamente pelo framework de Frontend (React). |
+| **RNF08** | Gestão de Sessão | Autenticação gerenciada via Tokens JWT (JSON Web Tokens) através do Spring Security. |
+| **RNF10** | Credenciais | Dados sensíveis e de conexão (URL, usuário, senha, secret do JWT) armazenados em `application.properties` ou `application.yml` via variáveis de ambiente, nunca commitados no código-fonte. |
+| **RNF11** | Compatibilidade | Funcionar nos navegadores Chrome, Firefox e Edge em suas versões atuais. |
 | **RNF12** | Desempenho | Tempo de resposta adequado para ambiente de desenvolvimento e homologação local. |
 
 ---
