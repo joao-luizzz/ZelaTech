@@ -1,0 +1,5 @@
+# Copie este arquivo para um novo arquivo chamado .env na pasta backend
+# e preencha com as suas senhas locais. Nunca commite o .env!
+
+DB_PASSWORD=sua_senha_do_banco_aqui
+JWT_SECRET=chave_secreta_longa_e_complexa_aqui
