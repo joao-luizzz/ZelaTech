@@ -37,6 +37,7 @@ public class SecurityConfig {
             .authorizeHttpRequests(auth -> auth
                 // ── Rotas públicas ──────────────────────────────────────────
                 .requestMatchers("/api/v1/auth/**").permitAll()
+                .requestMatchers("/swagger-ui.html", "/swagger-ui/**", "/v3/api-docs/**").permitAll()
 
                 // ── Rotas do Morador ────────────────────────────────────────
                 .requestMatchers("/api/v1/chamados/**").hasAnyRole("MORADOR", "SINDICO")
