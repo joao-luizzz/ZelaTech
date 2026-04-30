@@ -117,7 +117,13 @@ public class ChamadoService {
     // Helpers privados
     // -------------------------
 
+    private static final List<String> MIME_TYPES_PERMITIDOS = List.of(
+            "image/jpeg", "image/png", "image/webp"
+    );
+
     private String salvarFoto(MultipartFile foto) throws IOException {
+        // Salva temporariamente para verificar o MIME type real do conteúdo binário
+        // (não confia só no nome ou no Content-Type informado pelo cliente)
         Path uploadPath = Paths.get(UPLOAD_DIR);
         if (!Files.exists(uploadPath)) {
             Files.createDirectories(uploadPath);
@@ -126,6 +132,15 @@ public class ChamadoService {
         String nomeArquivo = UUID.randomUUID() + "_" + foto.getOriginalFilename();
         Path destino = uploadPath.resolve(nomeArquivo);
         foto.transferTo(destino);
+
+        String mimeType = Files.probeContentType(destino);
+        if (mimeType == null || !MIME_TYPES_PERMITIDOS.contains(mimeType)) {
+            Files.deleteIfExists(destino); // Remove o arquivo inválido
+            throw new IllegalArgumentException(
+                    "Tipo de arquivo não permitido. Envie apenas imagens JPEG, PNG ou WebP."
+            );
+        }
+
         return UPLOAD_DIR + nomeArquivo;
     }
 
