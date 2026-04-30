@@ -1,8 +1,8 @@
 package br.fatec.zelatech.backend.controller;
 
-import br.fatec.zelatech.backend.dto.chamado.AtualizarStatusDTO;
-import br.fatec.zelatech.backend.dto.chamado.ChamadoRequestDTO;
-import br.fatec.zelatech.backend.dto.chamado.ChamadoResponseDTO;
+import br.fatec.zelatech.backend.dto.chamado.*;
+import br.fatec.zelatech.backend.model.enums.CategoriaChamado;
+import br.fatec.zelatech.backend.model.enums.StatusChamado;
 import br.fatec.zelatech.backend.service.ChamadoService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -24,62 +24,48 @@ public class ChamadoController {
 
     private final ChamadoService chamadoService;
 
-    // ─────────────────────────────────────────────────────────────────
-    // ROTAS DO MORADOR
-    // ─────────────────────────────────────────────────────────────────
+    @GetMapping("/{id}")
+    public ResponseEntity<ChamadoDetalheDTO> buscarPorId(
+            @PathVariable Long id,
+            @AuthenticationPrincipal String email) {
+        return ResponseEntity.ok(chamadoService.buscarComHistorico(id, email));
+    }
 
-    /**
-     * POST /api/v1/chamados
-     * Morador abre um chamado. Recebe multipart/form-data por causa do upload de foto.
-     */
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    @PreAuthorize("hasRole('MORADOR')")
+    @PreAuthorize("hasAnyRole('MORADOR', 'SINDICO')")
     public ResponseEntity<ChamadoResponseDTO> abrirChamado(
             @Valid @ModelAttribute ChamadoRequestDTO dto,
-            @AuthenticationPrincipal UserDetails userDetails) throws IOException {
+            @AuthenticationPrincipal String email) throws IOException {
 
-        ChamadoResponseDTO response = chamadoService.abrir(dto, userDetails.getUsername());
+        ChamadoResponseDTO response = chamadoService.abrir(dto, email);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
-    /**
-     * GET /api/v1/chamados/meus
-     * Morador lista apenas os próprios chamados.
-     */
     @GetMapping("/meus")
-    @PreAuthorize("hasRole('MORADOR')")
+    @PreAuthorize("hasAnyRole('MORADOR', 'SINDICO')")
     public ResponseEntity<List<ChamadoResponseDTO>> listarMeusChamados(
-            @AuthenticationPrincipal UserDetails userDetails) {
+            @AuthenticationPrincipal String email) {
 
-        return ResponseEntity.ok(chamadoService.listarDoMorador(userDetails.getUsername()));
+        return ResponseEntity.ok(chamadoService.listarDoMorador(email));
     }
 
-    // ─────────────────────────────────────────────────────────────────
-    // ROTAS DO SÍNDICO
-    // ─────────────────────────────────────────────────────────────────
-
-    /**
-     * GET /api/v1/chamados
-     * Síndico lista todos os chamados do condomínio.
-     */
     @GetMapping
     @PreAuthorize("hasRole('SINDICO')")
-    public ResponseEntity<List<ChamadoResponseDTO>> listarTodos() {
-        return ResponseEntity.ok(chamadoService.listarTodos());
+    public ResponseEntity<List<ChamadoResponseDTO>> listarTodos(
+            @RequestParam(required = false) StatusChamado status,
+            @RequestParam(required = false) CategoriaChamado categoria) {
+        return ResponseEntity.ok(chamadoService.listarTodos(status, categoria));
     }
 
-    /**
-     * PATCH /api/v1/chamados/{id}/status
-     * Síndico avança o status de um chamado. Lança erro se tentar retroceder.
-     */
     @PatchMapping("/{id}/status")
     @PreAuthorize("hasRole('SINDICO')")
     public ResponseEntity<ChamadoResponseDTO> atualizarStatus(
             @PathVariable Long id,
             @Valid @RequestBody AtualizarStatusDTO dto,
-            @AuthenticationPrincipal UserDetails userDetails) {
+            @AuthenticationPrincipal String email) {
 
-        ChamadoResponseDTO response = chamadoService.atualizarStatus(id, dto, userDetails.getUsername());
+        ChamadoResponseDTO response = chamadoService.atualizarStatus(id, dto, email);
         return ResponseEntity.ok(response);
     }
+
 }

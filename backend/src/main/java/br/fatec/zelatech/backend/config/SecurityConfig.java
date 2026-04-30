@@ -39,8 +39,8 @@ public class SecurityConfig {
                 .requestMatchers("/api/v1/auth/**").permitAll()
 
                 // ── Rotas do Morador ────────────────────────────────────────
-                .requestMatchers(HttpMethod.POST, "/api/v1/chamados").hasRole("MORADOR")
-                .requestMatchers(HttpMethod.GET, "/api/v1/chamados/meus").hasRole("MORADOR")
+                .requestMatchers("/api/v1/chamados/**").hasAnyRole("MORADOR", "SINDICO")
+                .requestMatchers("/api/v1/avisos/**").hasAnyRole("MORADOR", "SINDICO")
 
                 // ── Rotas do Síndico ────────────────────────────────────────
                 .requestMatchers(HttpMethod.GET, "/api/v1/chamados").hasRole("SINDICO")
