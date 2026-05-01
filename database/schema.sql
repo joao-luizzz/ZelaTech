@@ -1,8 +1,8 @@
--- Script de Criação do Banco de Dados ZelaTech (PostgreSQL)
+-- Script de Criação do Banco de Dados ZelaTech (MySQL)
 -- Padronização: snake_case
 
 CREATE TABLE IF NOT EXISTS usuario (
-    id BIGSERIAL PRIMARY KEY,
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
     nome VARCHAR(150) NOT NULL,
     email VARCHAR(150) NOT NULL UNIQUE,
     senha VARCHAR(255) NOT NULL,
@@ -11,7 +11,7 @@ CREATE TABLE IF NOT EXISTS usuario (
 );
 
 CREATE TABLE IF NOT EXISTS aviso (
-    id BIGSERIAL PRIMARY KEY,
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
     titulo VARCHAR(100) NOT NULL,
     conteudo TEXT NOT NULL,
     data_publicacao TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
@@ -20,12 +20,12 @@ CREATE TABLE IF NOT EXISTS aviso (
 );
 
 CREATE TABLE IF NOT EXISTS chamado (
-    id BIGSERIAL PRIMARY KEY,
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
     titulo VARCHAR(100) NOT NULL,
     descricao TEXT NOT NULL,
-    categoria VARCHAR(50) NOT NULL, -- Enums: MANUTENCAO, LIMPEZA, SEGURANCA, OUTROS
-    prioridade VARCHAR(20) NOT NULL, -- Enums: BAIXA, MEDIA, ALTA
-    status VARCHAR(20) NOT NULL DEFAULT 'ABERTO', -- Enums: ABERTO, EM_ANDAMENTO, CONCLUIDO, CANCELADO
+    categoria VARCHAR(50) NOT NULL,
+    prioridade VARCHAR(20) NOT NULL,
+    status VARCHAR(20) NOT NULL DEFAULT 'ABERTO',
     foto_path VARCHAR(300),
     data_abertura TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     usuario_id BIGINT NOT NULL,
@@ -33,7 +33,7 @@ CREATE TABLE IF NOT EXISTS chamado (
 );
 
 CREATE TABLE IF NOT EXISTS historico_status (
-    id BIGSERIAL PRIMARY KEY,
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
     chamado_id BIGINT NOT NULL,
     status_anterior VARCHAR(20) NOT NULL,
     status_novo VARCHAR(20) NOT NULL,
@@ -43,7 +43,6 @@ CREATE TABLE IF NOT EXISTS historico_status (
     CONSTRAINT fk_historico_usuario FOREIGN KEY (usuario_id) REFERENCES usuario(id)
 );
 
--- Índices para performance
-CREATE INDEX IF NOT EXISTS idx_chamado_usuario ON chamado(usuario_id);
-CREATE INDEX IF NOT EXISTS idx_chamado_status ON chamado(status);
-CREATE INDEX IF NOT EXISTS idx_aviso_data ON aviso(data_publicacao);
+CREATE INDEX idx_chamado_usuario ON chamado(usuario_id);
+CREATE INDEX idx_chamado_status ON chamado(status);
+CREATE INDEX idx_aviso_data ON aviso(data_publicacao);
