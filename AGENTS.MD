@@ -30,14 +30,19 @@ O projeto migrou para uma arquitetura baseada em **API RESTful** e **Single Page
 
 | Integrante | Papel | Responsabilidades no código |
 |:-----------|:------|:---------------------------|
-| **João Luiz** | Lead Architect / Back-end | API REST, Spring Boot Controllers, Services, DTOs, Spring Security (JWT), integração de regras de negócio |
-| **Andrey Kerges** | Front-end Developer | SPA React, Consumo de API (Axios), Componentização, Tailwind CSS, Zustand/Context API para estado |
-| **Vitor Augusto** | DBA / Model Layer | Entidades do Spring Data JPA (`@Entity`), Mapeamento ORM, Repositories (`JpaRepository`), scripts SQL |
-| **Alexandre Hesse** | DevOps & QA | Configuração CORS, Deploy, Testes (JUnit/Jest), CI/CD, documentação geral |
+| **João Luiz** | Lead Architect / Back-end | API REST Completa, Spring Security (JWT), DTOs e Regras de Negócio |
+| **Vitor Augusto** | DBA / Model Layer | Entidades JPA, Mapeamento ORM e Scripts SQL (DDL/DML) |
+| **Andrey Kerges** | Front-end Developer | Fluxo do Morador, Hooks nativos do React e localStorage para estado |
+| **Alexandre Hesse** | Front-end Developer | Fluxo do Síndico, Telas Administrativas e Componentização Tailwind |
 
 ---
 
 ## 🏗️ 3. Padrões de Arquitetura — Regras de Codificação
+
+### Front-end (React)
+- **Linguagem:** JavaScript (ES6+).
+- **Estado:** Usar hooks nativos (`useState`, `useEffect`) e `localStorage` para persistência de sessão. **Não usar Zustand ou Context API**.
+- **Estilização:** Tailwind CSS (utilitários puros).
 
 ### Controllers REST (`br.fatec.zelatech.backend.controller`)
 - Nomenclatura: `[Entidade]Controller.java`.

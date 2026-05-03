@@ -6,15 +6,14 @@
 
 <p align="center">
   <img src="https://img.shields.io/badge/Java-17-ED8B00?logo=openjdk&logoColor=white" alt="Java">
-  <img src="https://img.shields.io/badge/Spring_Boot-3-6DB33F?logo=springboot&logoColor=white" alt="Spring Boot">
+  <img src="https://img.shields.io/badge/Spring_Boot-4.0-6DB33F?logo=springboot&logoColor=white" alt="Spring Boot">
   <img src="https://img.shields.io/badge/React-18-61DAFB?logo=react&logoColor=black" alt="React">
   <img src="https://img.shields.io/badge/MySQL-8.0-4479A1?logo=mysql&logoColor=white" alt="MySQL">
-  <img src="https://img.shields.io/badge/JWT-Security-000000?logo=jsonwebtokens&logoColor=white" alt="JWT">
   <img src="https://img.shields.io/badge/Tailwind_CSS-3.4-38B2AC?logo=tailwind-css&logoColor=white" alt="Tailwind CSS">
 </p>
 
 <p align="center">
-  <img src="https://img.shields.io/badge/Arquitetura-API_REST_&_SPA-blue?logo=architecture&logoColor=white" alt="API REST & SPA">
+  <img src="https://img.shields.io/badge/Arquitetura-API_REST-blue?logo=architecture&logoColor=white" alt="API REST">
   <img src="https://img.shields.io/badge/Status-Em_Desenvolvimento-yellow" alt="Status">
 </p>
 
@@ -22,9 +21,61 @@
 
 ## Sobre o Projeto
 
-O **ZelaTech** é uma aplicação web desenvolvida como projeto acadêmico para a disciplina de **Programação Orientada a Objetos** na FATEC Praia Grande. O sistema agora utiliza uma arquitetura moderna e desacoplada, servindo como um excelente portfólio Fullstack para o mercado de trabalho.
+O **ZelaTech** é uma aplicação web desenvolvida para a disciplina de **Programação Orientada a Objetos** na FATEC Praia Grande.
 
-O sistema elimina o uso de livros de ocorrência de papel ou mensagens informais em grupos de WhatsApp, centralizando a comunicação do condomínio. Moradores podem abrir chamados de manutenção com fotos, enquanto o síndico gerencia os status e publica comunicados oficiais no mural.
+O sistema utiliza uma arquitetura moderna baseada em **API REST (Spring Boot)** e **Frontend SPA (React)**, eliminando o uso de livros de ocorrência de papel. Moradores podem abrir chamados com fotos, enquanto o síndico gerencia os status e publica comunicados oficiais.
+
+---
+
+### Segurança & Controle
+- **RBAC (Role-Based Access Control):** Controle de acesso baseado em perfis (Síndico e Morador) via Spring Security.
+- **Autenticação Stateless:** Uso de JWT (JSON Web Token) para gestão de sessões.
+- **Proteção de Uploads:** Validação de tipo MIME via leitura binária, salvando o path com UUID no nome do arquivo para evitar conflitos e ataques.
+- **Prevenção contra Injeção SQL:** Uso de Spring Data JPA.
+
+---
+
+## Como Executar Localmente
+
+### Pré-requisitos
+- JDK 17
+- MySQL Server 8.0
+- Node.js (para o Frontend)
+
+### Passos de Configuração
+
+1. **Clone o repositório**
+```bash
+git clone https://github.com/joao-luizzz/ZelaTech.git
+cd ZelaTech
+```
+
+2. **Configure o Backend**
+- Vá para a pasta `backend`.
+- Crie um arquivo chamado **`.env`** baseado no `application.properties.example`.
+- Defina as seguintes variáveis:
+  ```env
+  DB_URL=jdbc:mysql://localhost:3306/zelatech_db
+  DB_USERNAME=seu_usuario
+  DB_PASSWORD=sua_senha
+  JWT_SECRET=sua_chave_secreta_jwt
+  ```
+
+3. **Configure o Banco de Dados**
+- Execute os scripts localizados em `/database/schema.sql` e `/database/seed.sql`.
+
+4. **Frontend** (Em desenvolvimento)
+- O projeto React está sendo estruturado na pasta `frontend`.
+
+---
+
+## Equipe Desenvolvedora
+- **João Luiz** - Lead Architect / Back-end completo
+- **Vitor Augusto** - DBA / Entidades JPA e scripts SQL
+- **Andrey Kerges** - Front-end fluxo do Morador
+- **Alexandre Hesse** - Front-end fluxo do Síndico
+
+---
 
 ### Problema Resolvido
 
