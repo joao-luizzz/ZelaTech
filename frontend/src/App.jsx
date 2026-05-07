@@ -1,122 +1,61 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from './assets/vite.svg'
-import heroImg from './assets/hero.png'
-import './App.css'
+import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
+import Dashboard from "./pages/sindico/Dashboard";
+import Mural from "./pages/sindico/Mural";
+import ChamadoDetalhe from "./pages/sindico/ChamadoDetalhe";
 
+/**
+ * Componente Principal App
+ * Aqui configuramos o Roteamento (React Router) para navegar entre as telas do Síndico.
+ */
 function App() {
-  const [count, setCount] = useState(0)
-
   return (
-    <>
-      <section id="center">
-        <div className="hero">
-          <img src={heroImg} className="base" width="170" height="179" alt="" />
-          <img src={reactLogo} className="framework" alt="React logo" />
-          <img src={viteLogo} className="vite" alt="Vite logo" />
-        </div>
-        <div>
-          <h1>Get started</h1>
-          <p>
-            Edit <code>src/App.jsx</code> and save to test <code>HMR</code>
+    <Router>
+      <div className="flex flex-col min-h-screen bg-[#0f172a]">
+        
+        {/* Barra de Navegação Simples (Navbar) */}
+        <nav className="bg-[#1e293b] border-b border-slate-700 p-4 shadow-md">
+          <div className="container mx-auto flex justify-between items-center">
+            <Link to="/sindico/dashboard" className="text-xl font-bold text-white flex items-center gap-2">
+              <span className="text-purple-500">Zela</span>Tech
+            </Link>
+            
+            <div className="flex gap-6">
+              <Link 
+                to="/sindico/dashboard" 
+                className="text-slate-300 hover:text-white text-sm font-medium transition-colors"
+              >
+                📊 Dashboard
+              </Link>
+              <Link 
+                to="/sindico/mural" 
+                className="text-slate-300 hover:text-white text-sm font-medium transition-colors"
+              >
+                📢 Mural de Avisos
+              </Link>
+            </div>
+          </div>
+        </nav>
+
+        {/* Área de Conteúdo (Onde as páginas serão renderizadas) */}
+        <main className="flex-1">
+          <Routes>
+            {/* Rota inicial redireciona para o Dashboard */}
+            <Route path="/" element={<Dashboard />} />
+            <Route path="/sindico/dashboard" element={<Dashboard />} />
+            <Route path="/sindico/mural" element={<Mural />} />
+            <Route path="/sindico/chamados/:id" element={<ChamadoDetalhe />} />
+          </Routes>
+        </main>
+
+        {/* Rodapé Simples */}
+        <footer className="bg-[#1e293b] border-t border-slate-800 p-4 text-center">
+          <p className="text-slate-500 text-xs">
+            © 2026 ZelaTech - Projeto Acadêmico FATEC Praia Grande
           </p>
-        </div>
-        <button
-          type="button"
-          className="counter"
-          onClick={() => setCount((count) => count + 1)}
-        >
-          Count is {count}
-        </button>
-      </section>
-
-      <div className="ticks"></div>
-
-      <section id="next-steps">
-        <div id="docs">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#documentation-icon"></use>
-          </svg>
-          <h2>Documentation</h2>
-          <p>Your questions, answered</p>
-          <ul>
-            <li>
-              <a href="https://vite.dev/" target="_blank">
-                <img className="logo" src={viteLogo} alt="" />
-                Explore Vite
-              </a>
-            </li>
-            <li>
-              <a href="https://react.dev/" target="_blank">
-                <img className="button-icon" src={reactLogo} alt="" />
-                Learn more
-              </a>
-            </li>
-          </ul>
-        </div>
-        <div id="social">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#social-icon"></use>
-          </svg>
-          <h2>Connect with us</h2>
-          <p>Join the Vite community</p>
-          <ul>
-            <li>
-              <a href="https://github.com/vitejs/vite" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#github-icon"></use>
-                </svg>
-                GitHub
-              </a>
-            </li>
-            <li>
-              <a href="https://chat.vite.dev/" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#discord-icon"></use>
-                </svg>
-                Discord
-              </a>
-            </li>
-            <li>
-              <a href="https://x.com/vite_js" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#x-icon"></use>
-                </svg>
-                X.com
-              </a>
-            </li>
-            <li>
-              <a href="https://bsky.app/profile/vite.dev" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#bluesky-icon"></use>
-                </svg>
-                Bluesky
-              </a>
-            </li>
-          </ul>
-        </div>
-      </section>
-
-      <div className="ticks"></div>
-      <section id="spacer"></section>
-    </>
-  )
+        </footer>
+      </div>
+    </Router>
+  );
 }
 
-export default App
+export default App;
