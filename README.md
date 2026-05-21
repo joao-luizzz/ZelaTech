@@ -133,10 +133,10 @@ Crie um schema no seu MySQL com o nome `zelatech_db` e execute o script contido 
 
 ## 👥 Equipe Desenvolvedora (FATEC Praia Grande)
 
-- **João Luiz** - Lead Architect & Backend Developer (Spring Boot, Segurança, Banco de Dados)
+- **João Luiz** - Lead Architect, Backend & DevOps Developer (Spring Boot, Segurança, Banco de Dados)
 - **Andrey Kerges** - Frontend Developer (React, Fluxo do Morador, Integração de APIs)
 - **Vitor Augusto** - DBA & Model Layer Developer (Entidades JPA, Relacionamentos, Scripts SQL)
-- **Alexandre Hesse** - DevOps & Frontend UX/UI Developer (Fluxo do Síndico, Design System Tailwind)
+- **Alexandre Hesse** - Frontend UX/UI Developer (Fluxo do Síndico, Design System Tailwind)
 
 ---
 <p align="center">
