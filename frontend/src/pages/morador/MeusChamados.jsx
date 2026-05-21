@@ -14,7 +14,7 @@ export default function MeusChamados() {
   useEffect(() => {
     const buscarChamados = async () => {
       try {
-        const response = await api.get('/api/v1/chamados/meus')
+        const response = await api.get('/api/v1/chamados')
         setChamados(response.data)
       } catch (err) {
         setErro('Não foi possível carregar seus chamados.')
