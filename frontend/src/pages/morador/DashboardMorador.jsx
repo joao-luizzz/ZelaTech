@@ -92,7 +92,7 @@ export default function DashboardMorador() {
                   <div className="flex items-center gap-2 text-xs text-slate-500 mt-auto pt-4 border-t border-slate-800">
                     <Calendar size={14} className="text-purple-400" />
                     <span>
-                      {format(parseISO(aviso.dataCriacao || aviso.dataPublicacao || new Date().toISOString()), "dd 'de' MMMM 'de' yyyy", { locale: ptBR })}
+                      {format(parseISO(aviso.dataPublicacao || new Date().toISOString()), "dd 'de' MMMM 'de' yyyy", { locale: ptBR })}
                     </span>
                   </div>
                 </div>

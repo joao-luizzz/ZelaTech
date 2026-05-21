@@ -131,7 +131,7 @@ function GerenciarMural() {
                 <div className="flex justify-between items-start mb-2">
                   <h3 className="text-xl font-bold text-white">{aviso.titulo}</h3>
                   <span className="text-xs text-slate-500 font-medium">
-                    {new Date(aviso.dataCriacao || new Date()).toLocaleDateString("pt-BR")}
+                    {new Date(aviso.dataPublicacao || new Date()).toLocaleDateString("pt-BR")}
                   </span>
                 </div>
                 <p className="text-slate-300 leading-relaxed mb-4 whitespace-pre-wrap">{aviso.conteudo}</p>

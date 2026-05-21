@@ -127,7 +127,7 @@ function DashboardSindico() {
                       <div className="flex flex-col text-right text-slate-400">
                         <span>Data</span>
                         <span className="font-semibold text-slate-200">
-                          {new Date(chamado.dataCriacao).toLocaleDateString("pt-BR")}
+                          {new Date(chamado.dataAbertura).toLocaleDateString("pt-BR")}
                         </span>
                       </div>
                     </div>

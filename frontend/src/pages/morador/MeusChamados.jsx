@@ -175,7 +175,7 @@ export default function MeusChamados() {
                   <div>
                     <span className="text-slate-500">Data </span>
                     <span className="text-slate-200 font-bold">
-                      {format(parseISO(chamado.dataCriacao || chamado.dataAbertura || new Date().toISOString()), 'dd/MM/yyyy', { locale: ptBR })}
+                      {format(parseISO(chamado.dataAbertura || new Date().toISOString()), 'dd/MM/yyyy', { locale: ptBR })}
                     </span>
                   </div>
                 </div>

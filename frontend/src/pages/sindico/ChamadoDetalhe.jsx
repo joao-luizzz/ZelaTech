@@ -109,7 +109,7 @@ function ChamadoDetalhe() {
               </div>
               <div className="bg-[#0f172a] p-3 rounded-xl border border-slate-800">
                 <p className="text-[10px] text-slate-500 uppercase font-bold">Data</p>
-                <p className="text-[10px] font-semibold">{new Date(chamado.dataCriacao).toLocaleString("pt-BR")}</p>
+                <p className="text-[10px] font-semibold">{new Date(chamado.dataAbertura).toLocaleString("pt-BR")}</p>
               </div>
               <div className="bg-[#0f172a] p-3 rounded-xl border border-slate-800">
                 <p className="text-[10px] text-slate-500 uppercase font-bold">Solicitante</p>
@@ -169,7 +169,7 @@ function ChamadoDetalhe() {
               ) : (
                 <div className="relative pl-6 border-l border-slate-700 pb-2">
                   <div className="absolute left-[-5px] top-1 w-2 h-2 rounded-full bg-purple-500" />
-                  <p className="text-[10px] text-slate-500 font-mono">{new Date(chamado.dataCriacao).toLocaleString("pt-BR")}</p>
+                  <p className="text-[10px] text-slate-500 font-mono">{new Date(chamado.dataAbertura).toLocaleString("pt-BR")}</p>
                   <p className="text-xs text-slate-300">Chamado aberto pelo morador</p>
                 </div>
               )}

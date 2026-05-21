@@ -242,21 +242,14 @@ export default function DetalheChamado() {
               Dados do Solicitante
             </h3>
             
-            <div className="flex items-center gap-3 mb-4">
+            <div className="flex items-center gap-3">
               <div className="w-10 h-10 rounded-full bg-purple-500/20 border border-purple-500/40 flex items-center justify-center text-purple-400 font-bold text-lg">
-                {chamado.morador?.nome?.[0].toUpperCase() || <User size={20} />}
+                {chamado.nomeMorador?.[0].toUpperCase() || <User size={20} />}
               </div>
               <div className="overflow-hidden">
-                <p className="font-bold text-white truncate">{chamado.morador?.nome || 'Usuário Desconhecido'}</p>
-                <p className="text-xs text-slate-400 truncate">Apt / Bloco: {chamado.morador?.apartamento || 'N/A'}</p>
+                <p className="font-bold text-white truncate">{chamado.nomeMorador || 'Usuário Desconhecido'}</p>
               </div>
             </div>
-            
-            {chamado.morador?.email && (
-              <p className="text-xs text-slate-400 truncate bg-[#0f172a] p-2 rounded-lg border border-slate-800 text-center font-mono">
-                {chamado.morador.email}
-              </p>
-            )}
           </div>
         </div>
       </div>
