@@ -41,7 +41,7 @@ O projeto migrou para uma arquitetura baseada em **API RESTful** e **Single Page
 
 ### Front-end (React)
 - **Linguagem:** JavaScript (ES6+).
-- **Estado:** Usar hooks nativos (`useState`, `useEffect`) e `localStorage` para persistência de sessão. **Não usar Zustand ou Context API**.
+- **Estado:** Usar hooks nativos (`useState`, `useEffect`), `localStorage` para persistência de sessão e React Context API exclusivamente para o controle global de autenticação (`AuthContext`). Não usar Zustand ou Redux para manter o projeto leve e de fácil manutenção.
 - **Estilização:** Tailwind CSS (utilitários puros).
 
 ### Controllers REST (`br.fatec.zelatech.backend.controller`)
