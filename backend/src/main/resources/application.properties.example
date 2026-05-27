@@ -1,0 +1,7 @@
+# Copie este arquivo para um novo arquivo chamado .env na pasta backend
+# e preencha com as suas senhas locais. Nunca commite o .env!
+
+DB_URL=jdbc:mysql://localhost:3306/zelatech_db
+DB_USERNAME=root
+DB_PASSWORD=sua_senha_aqui
+JWT_SECRET=chave_secreta_longa_e_aleatoria_aqui
