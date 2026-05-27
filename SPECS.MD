@@ -85,12 +85,12 @@ A base URL de todos os endpoints está sob `/api/v1`.
 | `/auth/login` | POST | Autentica usuário e retorna JWT e dados básicos | Pública |
 | `/auth/cadastro` | POST | Registra novo morador (ou síndico se for o 1º) | Pública |
 
-### Mural de Avisos (`/api/v1/mural`)
+### Mural de Avisos (`/api/v1/avisos`)
 | Endpoint | Método | Descrição | Autenticação |
 |----------|--------|-----------|--------------|
-| `/mural` | GET | Lista todos os avisos em ordem cronológica reversa | Todos |
-| `/mural` | POST | Cria um novo comunicado oficial no mural | Apenas Síndico |
-| `/mural/{id}` | DELETE | Exclui definitivamente um comunicado | Apenas Síndico |
+| `/avisos` | GET | Lista todos os avisos em ordem cronológica reversa | Todos |
+| `/avisos` | POST | Cria um novo comunicado oficial no mural | Apenas Síndico |
+| `/avisos/{id}` | DELETE | Exclui definitivamente um comunicado | Apenas Síndico |
 
 ### Chamados (`/api/v1/chamados`)
 | Endpoint | Método | Descrição | Autenticação |
