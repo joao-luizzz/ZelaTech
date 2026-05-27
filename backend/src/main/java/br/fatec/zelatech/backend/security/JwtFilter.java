@@ -45,7 +45,8 @@ public class JwtFilter extends OncePerRequestFilter {
             // Só seta o contexto se ainda não houver autenticação na thread atual
             if (email != null && SecurityContextHolder.getContext().getAuthentication() == null) {
                 // Monta as authorities direto do claim do JWT — sem query ao banco
-                SimpleGrantedAuthority authority = new SimpleGrantedAuthority(perfil);
+                String authorityName = perfil.startsWith("ROLE_") ? perfil : "ROLE_" + perfil;
+                SimpleGrantedAuthority authority = new SimpleGrantedAuthority(authorityName);
 
                 UsernamePasswordAuthenticationToken authToken =
                         new UsernamePasswordAuthenticationToken(
