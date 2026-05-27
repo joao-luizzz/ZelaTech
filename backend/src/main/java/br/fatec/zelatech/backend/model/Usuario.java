@@ -29,7 +29,6 @@ public class Usuario {
     @Column(nullable = false, length = 20)
     private String apartamento;
 
-    @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private Perfil perfil;
 }

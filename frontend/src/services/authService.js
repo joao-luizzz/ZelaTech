@@ -8,10 +8,11 @@ export const authService = {
     if (token) {
       localStorage.setItem('@ZelaTech:token', token);
       
+      const mappedRole = perfil.startsWith('ROLE_') ? perfil : `ROLE_${perfil}`;
       const user = {
         email: email,
         nome: nome,
-        role: perfil, // 'ROLE_SINDICO' ou 'ROLE_MORADOR'
+        role: mappedRole,
       };
       
       localStorage.setItem('@ZelaTech:user', JSON.stringify(user));
