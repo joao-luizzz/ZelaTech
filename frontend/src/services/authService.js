@@ -36,7 +36,11 @@ export const authService = {
     const userStr = localStorage.getItem('@ZelaTech:user');
     if (!userStr) return null;
     try {
-      return JSON.parse(userStr);
+      const user = JSON.parse(userStr);
+      if (user && user.role) {
+        user.role = user.role.startsWith('ROLE_') ? user.role : `ROLE_${user.role}`;
+      }
+      return user;
     } catch (e) {
       return null;
     }
