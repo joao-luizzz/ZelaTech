@@ -86,7 +86,7 @@ public class ChamadoService {
 
         Usuario usuario = usuarioService.buscarPorEmail(emailUsuario);
 
-        if (usuario.getPerfil() != Perfil.ROLE_SINDICO && !chamado.getUsuario().getEmail().equals(emailUsuario)) {
+        if (usuario.getPerfil() != Perfil.SINDICO && !chamado.getUsuario().getEmail().equals(emailUsuario)) {
             throw new IllegalArgumentException("Acesso negado");
         }
 

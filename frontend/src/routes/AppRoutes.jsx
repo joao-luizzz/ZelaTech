@@ -18,7 +18,6 @@ import NovoChamado from '../pages/morador/NovoChamado';
 // Síndico
 import DashboardSindico from '../pages/sindico/DashboardSindico';
 import GerenciarMural from '../pages/sindico/GerenciarMural';
-import ChamadoDetalhe from '../pages/sindico/ChamadoDetalhe';
 
 // Shared
 import DetalheChamado from '../pages/shared/DetalheChamado';
@@ -50,7 +49,6 @@ export const AppRoutes = () => {
         <Route element={<ProtectedRoute allowedRoles={['ROLE_SINDICO']} />}>
           <Route path="/sindico/dashboard" element={<DashboardSindico />} />
           <Route path="/sindico/mural" element={<GerenciarMural />} />
-          <Route path="/sindico/chamados/:id" element={<ChamadoDetalhe />} />
         </Route>
       </Route>
 

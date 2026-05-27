@@ -23,11 +23,11 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         Usuario usuario = usuarioRepository.findByEmail(email)
                 .orElseThrow(() -> new UsernameNotFoundException("Usuário não encontrado: " + email));
 
-        // O perfil já tem o prefixo ROLE_ (ex: ROLE_SINDICO), exigido pelo Spring Security
+        // Prende dinamicamente o prefixo ROLE_ exigido pelo Spring Security
         return new User(
                 usuario.getEmail(),
                 usuario.getSenha(),
-                List.of(new SimpleGrantedAuthority(usuario.getPerfil().name()))
+                List.of(new SimpleGrantedAuthority("ROLE_" + usuario.getPerfil().name()))
         );
     }
 }

@@ -14,6 +14,11 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import java.util.List;
+
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity
@@ -28,9 +33,21 @@ public class SecurityConfig {
     }
 
     @Bean
+    public CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration corsConfiguration = new CorsConfiguration();
+        corsConfiguration.setAllowedOrigins(List.of("http://localhost:5173", "http://localhost:3000"));
+        corsConfiguration.setAllowedMethods(List.of("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"));
+        corsConfiguration.setAllowedHeaders(List.of("*"));
+        corsConfiguration.setAllowCredentials(true);
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", corsConfiguration);
+        return source;
+    }
+
+    @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
-            .cors(org.springframework.security.config.Customizer.withDefaults())
+            .cors(cors -> cors.configurationSource(corsConfigurationSource()))
             .csrf(csrf -> csrf.disable())
             .sessionManagement(session ->
                 session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
@@ -40,15 +57,15 @@ public class SecurityConfig {
                 .requestMatchers("/api/v1/auth/**").permitAll()
                 .requestMatchers("/swagger-ui.html", "/swagger-ui/**", "/v3/api-docs/**").permitAll()
 
-                // ── Rotas do Morador ────────────────────────────────────────
-                .requestMatchers("/api/v1/chamados/**").hasAnyRole("MORADOR", "SINDICO")
-                .requestMatchers("/api/v1/avisos/**").hasAnyRole("MORADOR", "SINDICO")
-
-                // ── Rotas do Síndico ────────────────────────────────────────
+                // ── Rotas específicas do Síndico (devem vir antes das genéricas) ──
                 .requestMatchers(HttpMethod.GET, "/api/v1/chamados").hasRole("SINDICO")
                 .requestMatchers(HttpMethod.PATCH, "/api/v1/chamados/*/status").hasRole("SINDICO")
                 .requestMatchers(HttpMethod.POST, "/api/v1/avisos").hasRole("SINDICO")
                 .requestMatchers(HttpMethod.DELETE, "/api/v1/avisos/*").hasRole("SINDICO")
+
+                // ── Rotas genéricas/moradores (devem vir depois das específicas) ──
+                .requestMatchers("/api/v1/chamados/**").hasAnyRole("MORADOR", "SINDICO")
+                .requestMatchers("/api/v1/avisos/**").hasAnyRole("MORADOR", "SINDICO")
 
                 // ── Rotas compartilhadas (qualquer autenticado) ─────────────
                 .requestMatchers(HttpMethod.GET, "/api/v1/avisos").authenticated()

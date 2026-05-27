@@ -30,8 +30,8 @@ public class UsuarioService {
 
         // Se não houver nenhum usuário no banco, o primeiro vira Síndico
         Perfil perfil = usuarioRepository.count() == 0
-                ? Perfil.ROLE_SINDICO
-                : Perfil.ROLE_MORADOR;
+                ? Perfil.SINDICO
+                : Perfil.MORADOR;
 
         Usuario novoUsuario = new Usuario();
         novoUsuario.setNome(dto.nome());

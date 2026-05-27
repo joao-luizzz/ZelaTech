@@ -94,7 +94,7 @@ function DashboardSindico() {
               return (
                 <div 
                   key={chamado.id} 
-                  onClick={() => navigate(`/sindico/chamados/${chamado.id}`)}
+                  onClick={() => navigate(`/chamados/${chamado.id}`)}
                   className="bg-[#1e293b] rounded-xl shadow-xl overflow-hidden flex border border-slate-700 hover:border-purple-500 transition-all group cursor-pointer hover:scale-[1.02]"
                 >
                   <div className={`w-[10px] ${getCorCategoria(chamado.categoria)}`} />

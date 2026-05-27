@@ -1,6 +1,7 @@
 import React from 'react';
 import { Navigate, Outlet } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
+import AcessoNegado from '../pages/shared/AcessoNegado';
 
 export const ProtectedRoute = ({ allowedRoles = [] }) => {
   const { user, isAuthenticated } = useAuth();
@@ -12,12 +13,8 @@ export const ProtectedRoute = ({ allowedRoles = [] }) => {
 
   // Se tem roles específicas necessárias e o usuário não possui a role
   if (allowedRoles.length > 0 && !allowedRoles.includes(user.role)) {
-    // Usuário logado mas sem permissão, joga pro dashboard padrão baseado no perfil dele
-    if (user.role === 'ROLE_SINDICO') {
-      return <Navigate to="/sindico/dashboard" replace />;
-    } else {
-      return <Navigate to="/morador/dashboard" replace />;
-    }
+    // Usuário logado mas sem permissão, exibe a tela de acesso negado
+    return <AcessoNegado />;
   }
 
   // Usuário autorizado

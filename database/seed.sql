@@ -3,9 +3,9 @@
 
 -- Inserindo Usuários (Senhas em texto plano para teste, mas no backend devem ser BCrypt)
 INSERT INTO usuario (nome, email, senha, apartamento, perfil) VALUES
-('João Síndico', 'sindico@zelatech.com', '$2a$10$8.UnVuG9HHgffUDAlk8q6uy573U9EnYy4pSp9fPToW2Gf.pZfL7F6', '101', 'ROLE_SINDICO'),
-('Maria Moradora', 'maria@gmail.com', '$2a$10$8.UnVuG9HHgffUDAlk8q6uy573U9EnYy4pSp9fPToW2Gf.pZfL7F6', '202', 'ROLE_MORADOR'),
-('Carlos Morador', 'carlos@hotmail.com', '$2a$10$8.UnVuG9HHgffUDAlk8q6uy573U9EnYy4pSp9fPToW2Gf.pZfL7F6', '303', 'ROLE_MORADOR');
+('João Síndico', 'sindico@zelatech.com', '$2a$10$8.UnVuG9HHgffUDAlk8q6uy573U9EnYy4pSp9fPToW2Gf.pZfL7F6', '101', 'SINDICO'),
+('Maria Moradora', 'maria@gmail.com', '$2a$10$8.UnVuG9HHgffUDAlk8q6uy573U9EnYy4pSp9fPToW2Gf.pZfL7F6', '202', 'MORADOR'),
+('Carlos Morador', 'carlos@hotmail.com', '$2a$10$8.UnVuG9HHgffUDAlk8q6uy573U9EnYy4pSp9fPToW2Gf.pZfL7F6', '303', 'MORADOR');
 
 -- Inserindo Avisos
 INSERT INTO aviso (titulo, conteudo, sindico_id) VALUES
