@@ -52,6 +52,13 @@ public class SecurityConfig {
             .sessionManagement(session ->
                 session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
             )
+            .exceptionHandling(exception -> exception
+                .authenticationEntryPoint((request, response, authException) -> {
+                    response.setStatus(jakarta.servlet.http.HttpServletResponse.SC_UNAUTHORIZED);
+                    response.setContentType("application/json");
+                    response.getWriter().write("{\"status\":401,\"erro\":\"Não autorizado ou token expirado\"}");
+                })
+            )
             .authorizeHttpRequests(auth -> auth
                 // ── Rotas públicas ──────────────────────────────────────────
                 .requestMatchers("/api/v1/auth/**").permitAll()
