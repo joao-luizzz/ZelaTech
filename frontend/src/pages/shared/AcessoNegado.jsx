@@ -16,12 +16,12 @@ const AcessoNegado = () => {
   };
 
   return (
-    <div className="min-h-screen bg-[#0f172a] text-slate-100 flex flex-col items-center justify-center p-6 relative overflow-hidden">
+    <div className="min-h-screen bg-background text-foreground flex flex-col items-center justify-center p-6 relative overflow-hidden">
       {/* Luzes de Fundo (Glow Effect) */}
       <div className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[350px] h-[350px] bg-red-500/10 rounded-full blur-[80px] pointer-events-none" />
       <div className="absolute bottom-1/4 left-1/3 w-[250px] h-[250px] bg-purple-500/5 rounded-full blur-[60px] pointer-events-none" />
 
-      <div className="w-full max-w-md bg-[#1e293b]/60 backdrop-blur-xl border border-slate-800 rounded-3xl p-8 text-center shadow-2xl relative z-10 animate-in fade-in zoom-in-95 duration-500">
+      <div className="w-full max-w-md bg-card/60 backdrop-blur-xl border border-border rounded-3xl p-8 text-center shadow-2xl relative z-10 animate-in fade-in zoom-in-95 duration-500">
         
         {/* Ícone de Escudo de Alerta com Pulso */}
         <div className="mx-auto w-20 h-20 bg-red-500/10 border border-red-500/30 rounded-2xl flex items-center justify-center text-red-400 mb-6 relative animate-pulse">
@@ -35,11 +35,11 @@ const AcessoNegado = () => {
         </span>
 
         {/* Títulos */}
-        <h1 className="text-2xl font-extrabold text-white mb-3 tracking-tight">
+        <h1 className="text-2xl font-extrabold text-foreground mb-3 tracking-tight">
           Área Reservada
         </h1>
         
-        <p className="text-slate-400 text-sm leading-relaxed mb-8 max-w-sm mx-auto">
+        <p className="text-muted-foreground text-sm leading-relaxed mb-8 max-w-sm mx-auto">
           Desculpe, o seu perfil de usuário atual não possui as credenciais necessárias para acessar esta página ou recurso.
         </p>
 
@@ -47,7 +47,7 @@ const AcessoNegado = () => {
         <div className="flex flex-col gap-3">
           <button
             onClick={handleGoBack}
-            className="w-full py-3.5 px-5 bg-gradient-to-r from-red-600 to-red-500 hover:from-red-500 hover:to-red-400 active:scale-[0.98] text-white font-bold rounded-2xl shadow-lg shadow-red-500/10 transition-all duration-300 flex items-center justify-center gap-2"
+            className="w-full py-3.5 px-5 bg-gradient-to-r from-red-600 to-red-500 hover:from-red-500 hover:to-red-400 active:scale-[0.98] text-foreground font-bold rounded-2xl shadow-lg shadow-red-500/10 transition-all duration-300 flex items-center justify-center gap-2"
           >
             <Home size={18} />
             Voltar para o Painel Seguro
@@ -55,7 +55,7 @@ const AcessoNegado = () => {
           
           <button
             onClick={() => navigate(-1)}
-            className="w-full py-3.5 px-5 bg-slate-800/80 hover:bg-slate-800 border border-slate-700/60 active:scale-[0.98] text-slate-300 hover:text-white font-semibold rounded-2xl transition-all duration-300 flex items-center justify-center gap-2"
+            className="w-full py-3.5 px-5 bg-secondary/80 hover:bg-secondary border border-border/60 active:scale-[0.98] text-card-foreground hover:text-foreground font-semibold rounded-2xl transition-all duration-300 flex items-center justify-center gap-2"
           >
             <ArrowLeft size={18} />
             Voltar à Página Anterior

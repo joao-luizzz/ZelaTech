@@ -56,7 +56,7 @@ export default function NovoChamado() {
 
   // Classes reutilizáveis para os inputs do formulário (Andrey + Premium Dark)
   const inputClass =
-    'w-full bg-[#0f172a] border border-slate-700 text-white rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-purple-500 transition-colors placeholder-slate-500';
+    'w-full bg-background border border-border text-foreground rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-purple-500 transition-colors placeholder-slate-500';
   const labelClass = 'block text-slate-350 text-sm font-bold mb-2';
 
   return (
@@ -65,22 +65,22 @@ export default function NovoChamado() {
       <div className="mb-8">
         <button
           onClick={() => navigate('/morador/dashboard')}
-          className="text-slate-400 hover:text-white text-sm mb-4 flex items-center gap-1 transition-colors font-medium"
+          className="text-muted-foreground hover:text-foreground text-sm mb-4 flex items-center gap-1 transition-colors font-medium"
         >
           <ArrowLeft size={16} /> Voltar ao Dashboard
         </button>
-        <h1 className="text-3xl font-extrabold tracking-tight text-white">
+        <h1 className="text-3xl font-extrabold tracking-tight text-foreground">
           Abrir Novo Chamado
         </h1>
-        <p className="text-slate-400 mt-1">
+        <p className="text-muted-foreground mt-1">
           Descreva o problema para que o síndico possa atendê-lo.
         </p>
       </div>
 
       {/* ── Card do formulário (Andrey + Premium Dark) ── */}
-      <div className="bg-[#1e293b] rounded-2xl shadow-xl border border-slate-700 flex overflow-hidden animate-in fade-in duration-300">
+      <div className="bg-card rounded-2xl shadow-xl border border-border flex overflow-hidden animate-in fade-in duration-300">
         {/* Barra lateral roxa — identidade da ação de criar (Andrey) */}
-        <div className="w-[10px] bg-purple-600 flex-shrink-0" />
+        <div className="w-[10px] bg-primary flex-shrink-0" />
 
         <form onSubmit={handleSubmit} className="p-6 sm:p-8 flex-1 space-y-6">
           {/* Campo: Título */}
@@ -95,7 +95,7 @@ export default function NovoChamado() {
               onChange={(e) => setTitulo(e.target.value)}
               className={inputClass}
             />
-            <p className="text-slate-500 text-xs mt-1 text-right">
+            <p className="text-muted-foreground text-xs mt-1 text-right">
               {titulo.length}/100
             </p>
           </div>
@@ -112,7 +112,7 @@ export default function NovoChamado() {
               onChange={(e) => setDescricao(e.target.value)}
               className={`${inputClass} resize-none`}
             />
-            <p className="text-slate-500 text-xs mt-1 text-right">
+            <p className="text-muted-foreground text-xs mt-1 text-right">
               {descricao.length}/500
             </p>
           </div>
@@ -153,7 +153,7 @@ export default function NovoChamado() {
           {/* Campo: Foto (opcional) */}
           <div>
             <label className={labelClass}>Foto (opcional)</label>
-            <div className="border-2 border-dashed border-slate-700 hover:border-purple-500/50 rounded-xl p-6 text-center transition-colors bg-[#0f172a]/50">
+            <div className="border-2 border-dashed border-border hover:border-purple-500/50 rounded-xl p-6 text-center transition-colors bg-background/50">
               <input
                 type="file"
                 accept="image/jpeg,image/png"
@@ -171,7 +171,7 @@ export default function NovoChamado() {
                     <p className="text-slate-350 text-sm">
                       Clique para selecionar uma imagem
                     </p>
-                    <p className="text-slate-500 text-xs">
+                    <p className="text-muted-foreground text-xs">
                       JPEG ou PNG • Máx. 5MB
                     </p>
                   </>
@@ -196,18 +196,18 @@ export default function NovoChamado() {
           )}
 
           {/* Botão de envio */}
-          <div className="pt-4 flex justify-end gap-3 border-t border-slate-700">
+          <div className="pt-4 flex justify-end gap-3 border-t border-border">
             <button
               type="button"
               onClick={() => navigate('/morador/dashboard')}
-              className="px-5 py-2.5 border border-slate-700 text-slate-300 rounded-lg hover:bg-[#0f172a] hover:text-white transition-colors text-sm font-medium"
+              className="px-5 py-2.5 border border-border text-card-foreground rounded-lg hover:bg-background hover:text-foreground transition-colors text-sm font-medium"
             >
               Cancelar
             </button>
             <button
               type="submit"
               disabled={enviando || sucesso}
-              className="inline-flex items-center gap-2 px-6 py-2.5 border border-transparent rounded-lg shadow-lg shadow-purple-500/20 text-sm font-bold text-white bg-purple-600 hover:bg-purple-700 transition-all active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed"
+              className="inline-flex items-center gap-2 px-6 py-2.5 border border-transparent rounded-lg shadow-lg shadow-primary/20 text-sm font-bold text-foreground bg-primary hover:bg-primary/90 transition-all active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {enviando ? (
                 <>

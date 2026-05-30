@@ -36,10 +36,9 @@ api.interceptors.response.use(
     return response;
   },
   (error) => {
-    if (error.response && error.response.status === 401) {
-      // Token expirou ou é inválido, limpar localStorage e redirecionar
-      // Isso deve ser integrado de forma suave com o Router, 
-      // mas como safety net o localStorage é limpo
+    if (error.response && (error.response.status === 401 || error.response.status === 403)) {
+      // Token expirou ou acesso negado, limpar localStorage e redirecionar
+      // O Spring Security retorna 403 por padrão quando o token expira sem um EntryPoint customizado
       localStorage.removeItem('@ZelaTech:token');
       localStorage.removeItem('@ZelaTech:user');
       

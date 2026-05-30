@@ -10,4 +10,9 @@ class BackendApplicationTests {
 	void contextLoads() {
 	}
 
+	@Test
+	void genHash() {
+		System.out.println("HASH123456=" + new org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder().encode("123456"));
+	}
+
 }

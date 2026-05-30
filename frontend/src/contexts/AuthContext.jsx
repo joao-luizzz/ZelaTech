@@ -21,14 +21,9 @@ export const AuthProvider = ({ children }) => {
   }, []);
 
   const login = async (email, password) => {
-    try {
-      setLoading(true);
-      const data = await authService.login(email, password);
-      setUser(data.user);
-      return data;
-    } finally {
-      setLoading(false);
-    }
+    const data = await authService.login(email, password);
+    setUser(data.user);
+    return data;
   };
 
   const logout = () => {

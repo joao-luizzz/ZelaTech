@@ -56,6 +56,7 @@ public class SecurityConfig {
                 // ── Rotas públicas ──────────────────────────────────────────
                 .requestMatchers("/api/v1/auth/**").permitAll()
                 .requestMatchers("/swagger-ui.html", "/swagger-ui/**", "/v3/api-docs/**").permitAll()
+                .requestMatchers("/uploads/**").permitAll()
 
                 // ── Rotas específicas do Síndico (devem vir antes das genéricas) ──
                 .requestMatchers(HttpMethod.GET, "/api/v1/chamados").hasRole("SINDICO")

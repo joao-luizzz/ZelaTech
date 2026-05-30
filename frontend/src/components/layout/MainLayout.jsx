@@ -1,11 +1,13 @@
 import React, { useState } from 'react';
 import { Outlet, Link, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
-import { Menu, Home, LogOut, FileText, PlusCircle, Bell, X, Building2 } from 'lucide-react';
+import { useTheme } from '../../contexts/ThemeContext';
+import { Menu, Home, LogOut, FileText, PlusCircle, Bell, X, Building2, Sun, Moon } from 'lucide-react';
 import clsx from 'clsx';
 
 export default function MainLayout() {
   const { user, logout, isSindico } = useAuth();
+  const { theme, toggleTheme } = useTheme();
   const navigate = useNavigate();
   const location = useLocation();
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -27,40 +29,48 @@ export default function MainLayout() {
       ];
 
   return (
-    <div className="min-h-screen bg-[#0f172a] flex flex-col md:flex-row text-slate-100 font-sans">
+    <div className="min-h-screen bg-background flex flex-col md:flex-row text-foreground font-sans">
       {/* Mobile Header */}
-      <div className="md:hidden bg-[#1e293b] border-b border-slate-700 p-4 flex justify-between items-center sticky top-0 z-20">
-        <div className="flex items-center gap-2 text-white font-bold text-xl">
-          <Building2 size={24} className="text-purple-500" />
-          <span className="text-purple-500">Zela</span>Tech
+      <div className="md:hidden bg-card border-b border-border p-4 flex justify-between items-center sticky top-0 z-20">
+        <div className="flex items-center gap-2 text-foreground font-bold text-xl">
+          <Building2 size={24} className="text-primary" />
+          <span className="text-primary">Zela</span>Tech
         </div>
-        <button onClick={() => setSidebarOpen(!sidebarOpen)} className="text-slate-300 hover:text-white">
-          {sidebarOpen ? <X size={24} /> : <Menu size={24} />}
-        </button>
+        <div className="flex items-center gap-4">
+          <button onClick={toggleTheme} className="text-muted-foreground hover:text-foreground transition-colors">
+            {theme === 'dark' ? <Sun size={20} /> : <Moon size={20} />}
+          </button>
+          <button onClick={() => setSidebarOpen(!sidebarOpen)} className="text-muted-foreground hover:text-foreground transition-colors">
+            {sidebarOpen ? <X size={24} /> : <Menu size={24} />}
+          </button>
+        </div>
       </div>
 
       {/* Sidebar Overlay (Mobile) */}
       {sidebarOpen && (
         <div
-          className="fixed inset-0 bg-[#0f172a]/80 backdrop-blur-sm z-30 md:hidden"
+          className="fixed inset-0 bg-background/80 backdrop-blur-sm z-30 md:hidden"
           onClick={() => setSidebarOpen(false)}
         />
       )}
 
       {/* Sidebar */}
       <aside className={clsx(
-        "fixed md:static inset-y-0 left-0 w-64 bg-[#1e293b] border-r border-slate-700 z-40 transform transition-transform duration-300 ease-in-out flex flex-col",
+        "fixed md:static inset-y-0 left-0 w-64 bg-card border-r border-border z-40 transform transition-transform duration-300 ease-in-out flex flex-col",
         sidebarOpen ? "translate-x-0" : "-translate-x-full md:translate-x-0"
       )}>
-        <div className="h-16 flex items-center px-6 border-b border-slate-700 hidden md:flex">
-          <div className="flex items-center gap-2 text-white font-bold text-xl">
-            <Building2 size={24} className="text-purple-500" />
-            <span className="text-purple-500">Zela</span>Tech
+        <div className="h-16 flex items-center justify-between px-6 border-b border-border hidden md:flex">
+          <div className="flex items-center gap-2 text-foreground font-bold text-xl">
+            <Building2 size={24} className="text-primary" />
+            <span className="text-primary">Zela</span>Tech
           </div>
+          <button onClick={toggleTheme} className="text-muted-foreground hover:text-foreground transition-colors" title="Alternar Tema">
+            {theme === 'dark' ? <Sun size={18} /> : <Moon size={18} />}
+          </button>
         </div>
 
         <div className="p-6">
-          <p className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-4">
+          <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-4">
             Menu Principal
           </p>
           <nav className="space-y-1">
@@ -75,11 +85,11 @@ export default function MainLayout() {
                   className={clsx(
                     "flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-all duration-200",
                     isActive
-                      ? "bg-purple-600/20 text-purple-400 border-l-4 border-purple-500 pl-2.5"
-                      : "text-slate-400 hover:bg-[#0f172a] hover:text-white"
+                      ? "bg-primary/20 text-primary border-l-4 border-primary pl-2.5"
+                      : "text-muted-foreground hover:bg-secondary hover:text-foreground"
                   )}
                 >
-                  <Icon size={18} className={isActive ? "text-purple-400" : "text-slate-400"} />
+                  <Icon size={18} className={isActive ? "text-primary" : "text-muted-foreground"} />
                   {item.name}
                 </Link>
               );
@@ -87,19 +97,19 @@ export default function MainLayout() {
           </nav>
         </div>
 
-        <div className="mt-auto p-4 border-t border-slate-700">
+        <div className="mt-auto p-4 border-t border-border">
           <div className="flex items-center gap-3 px-3 py-3 rounded-lg mb-2">
-            <div className="w-8 h-8 rounded-full bg-purple-500/20 border border-purple-500/40 flex items-center justify-center text-purple-400 font-bold">
-              {user?.email?.[0].toUpperCase()}
+            <div className="w-8 h-8 rounded-full bg-primary/20 border border-primary/40 flex items-center justify-center text-primary font-bold">
+              {user?.nome?.[0].toUpperCase()}
             </div>
             <div className="overflow-hidden">
-              <p className="text-sm font-medium text-white truncate">{user?.nome || 'Usuário'}</p>
-              <p className="text-xs text-slate-400 truncate">{user?.role === 'ROLE_SINDICO' ? 'Síndico' : 'Morador'}</p>
+              <p className="text-sm font-medium text-foreground truncate">{user?.nome || 'Usuário'}</p>
+              <p className="text-xs text-muted-foreground truncate">{user?.role === 'ROLE_SINDICO' ? 'Síndico' : 'Morador'}</p>
             </div>
           </div>
           <button
             onClick={handleLogout}
-            className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-red-400 hover:bg-red-500/10 transition-colors"
+            className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-destructive hover:bg-destructive/10 transition-colors"
           >
             <LogOut size={18} />
             Sair do sistema
@@ -108,7 +118,7 @@ export default function MainLayout() {
       </aside>
 
       {/* Main Content */}
-      <main className="flex-1 min-w-0 overflow-auto">
+      <main className="flex-1 min-w-0 overflow-auto bg-background">
         <div className="p-4 md:p-8 max-w-7xl mx-auto">
           <Outlet />
         </div>
