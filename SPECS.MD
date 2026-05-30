@@ -116,17 +116,22 @@ ABERTO  ──>  EM_ANDAMENTO  ──>  RESOLVIDO
 ### Segurança de Uploads
 *   **Leitura de Assinatura Binária:** O backend valida o cabeçalho binário (Magic Numbers) das fotos para confirmar se são de fato extensões de imagens válidas (`image/jpeg`, `image/png`), ignorando simples extensões no nome do arquivo.
 *   **Ofuscação de Nomes:** Os arquivos são salvos localmente mascarados por um UUID gerado em tempo de execução para evitar substituições e vazamento de caminhos do servidor.
+*   **Mapeamento de Recursos Estáticos (`WebMvcConfig`):** O backend expõe o endpoint `/uploads/chamados/**` mapeado de forma híbrida tanto para o diretório físico local de uploads do servidor quanto para o diretório `/seed-images/` do classpath do projeto.
 
 ---
 
-## 6. Padrões de Código
+## 6. Padrões de Código e Arquitetura Avançada
 
 ### Backend (Spring Boot)
 As camadas Java seguem uma hierarquia rígida de responsabilidades:
 1.  **Controller:** Lida com roteamento HTTP, desserialização DTO e validações declarativas (`@Valid`).
 2.  **Service:** Centraliza regras de negócio, controle transacional e lançamento de exceções customizadas de domínio.
 3.  **Repository:** Fornece a persistência por meio das interfaces do Spring Data JPA.
+4.  **Security Exception Handling:** Implementação de `AuthenticationEntryPoint` customizado para mapear formalmente erros de credenciais/JWT inválido ou expirado como **HTTP 401 Unauthorized** com payloads JSON semânticos.
 
 ### Frontend (React + Vite)
-*   **Serviços Centralizados:** As rotas e requisições da API são mapeadas na pasta `/services` usando a instância do Axios, que insere dinamicamente o Token JWT em todas as requisições protegidas.
-*   **Gerenciamento de Contexto:** Utilização de React Context (`AuthContext`) para controle de estados sensíveis globais (sessão do usuário e tokens).
+*   **Serviços Centralizados:** As rotas e requisições da API são mapeadas na pasta `/services` usando a instância do Axios, que insere dinamicamente o Token JWT em todas as requisições protegidas e intercepta erros HTTP 401 para purga de cache e logout automático.
+*   **Gerenciamento de Contexto Híbrido:** 
+    - `AuthContext`: Lida com sessões, tokens e papéis do usuário.
+    - `ThemeContext`: Controla a preferência visual de Light/Dark Mode armazenando o estado no navegador e alternando classes do elemento raiz (`document.documentElement`).
+*   **Design System Tailwind CSS v4:** Interface construída com a especificação v4 da framework utilitária, baseando classes em tokens semânticos (`color-background`, `color-card`, `color-primary`) que se traduzem dinamicamente dependendo da presença da classe `.dark`.
