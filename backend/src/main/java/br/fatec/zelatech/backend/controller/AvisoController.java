@@ -9,7 +9,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -38,9 +37,9 @@ public class AvisoController {
     @PreAuthorize("hasRole('SINDICO')")
     public ResponseEntity<AvisoResponseDTO> publicar(
             @Valid @RequestBody AvisoRequestDTO dto,
-            @AuthenticationPrincipal UserDetails userDetails) {
+            @AuthenticationPrincipal String email) {
 
-        AvisoResponseDTO response = avisoService.publicar(dto, userDetails.getUsername());
+        AvisoResponseDTO response = avisoService.publicar(dto, email);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 

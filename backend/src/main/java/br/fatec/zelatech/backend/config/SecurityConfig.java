@@ -65,18 +65,16 @@ public class SecurityConfig {
                 .requestMatchers("/swagger-ui.html", "/swagger-ui/**", "/v3/api-docs/**").permitAll()
                 .requestMatchers("/uploads/**").permitAll()
 
-                // ── Rotas específicas do Síndico (devem vir antes das genéricas) ──
+                // ── Rotas específicas (devem vir antes das genéricas) ────────
                 .requestMatchers(HttpMethod.GET, "/api/v1/chamados").hasRole("SINDICO")
                 .requestMatchers(HttpMethod.PATCH, "/api/v1/chamados/*/status").hasRole("SINDICO")
                 .requestMatchers(HttpMethod.POST, "/api/v1/avisos").hasRole("SINDICO")
                 .requestMatchers(HttpMethod.DELETE, "/api/v1/avisos/*").hasRole("SINDICO")
+                .requestMatchers(HttpMethod.GET, "/api/v1/avisos").authenticated()
 
                 // ── Rotas genéricas/moradores (devem vir depois das específicas) ──
                 .requestMatchers("/api/v1/chamados/**").hasAnyRole("MORADOR", "SINDICO")
                 .requestMatchers("/api/v1/avisos/**").hasAnyRole("MORADOR", "SINDICO")
-
-                // ── Rotas compartilhadas (qualquer autenticado) ─────────────
-                .requestMatchers(HttpMethod.GET, "/api/v1/avisos").authenticated()
 
                 // ── Qualquer outra rota exige autenticação ──────────────────
                 .anyRequest().authenticated()

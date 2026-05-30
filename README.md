@@ -27,10 +27,11 @@ O sistema elimina o uso de livros de ocorrência físicos e grupos desorganizado
 
 ---
 
-## 🎨 Design & Usabilidade (Premium Dark Mode)
+## 🎨 Design & Usabilidade (Dynamic Light & Premium Dark Mode)
 
 O frontend foi desenvolvido com as melhores práticas de design moderno, apresentando:
-- **Interface Sleek Dark:** Cores profundas (`#0f172a`, `#1e293b`), contrastando com detalhes em roxo neon e badges semânticos de status.
+- **Sistema de Temas Dinâmico (Light & Dark Mode):** Alternância completa de temas gerenciada via React Context (`ThemeContext`) e botão flutuante rápido, estilizada com a sintaxe ultra moderna do **Tailwind CSS v4** baseada em variáveis semânticas.
+- **Interface Visual Premium:** Cores profundas (`#0f172a`, `#1e293b`) no Dark Mode contrastando com detalhes em roxo neon, e uma interface limpa e elegante no Light Mode, ambas com badges semânticos de status.
 - **Responsividade Total:** Adaptado perfeitamente para celulares de moradores e desktops de síndicos.
 - **Feedback Visual Avançado:** Transições suaves, loadings animados com Lucide React, contadores de caracteres em tempo real e upload de imagem interativo via drag-and-drop ou clique.
 
@@ -41,7 +42,7 @@ O frontend foi desenvolvido com as melhores práticas de design moderno, apresen
 ### 🏠 Área do Morador
 - **Mural Digital:** Visualização em tempo real de comunicados oficiais publicados pelo síndico.
 - **Abertura de Chamados:** Envio de ocorrências com título (máx. 100 caracteres), categoria (Elétrica, Hidráulica, etc.), descrição detalhada (máx. 500 caracteres), nível de prioridade e anexo opcional de **imagem/foto probatória**.
-- **Meus Chamados:** Acompanhamento dinâmico das próprias solicitações organizadas em cards visuais responsivos com bordas coloridas semânticas.
+- **Meus Chamados:** Acompanhamento dinâmico das próprias solicitações organizadas em cards visuais responsivos com bordas coloridas semânticas e barra de progresso.
 
 ### 👑 Área do Síndico
 - **Painel Administrativo:** Visão global e controle centralizado de todos os chamados abertos no condomínio.
@@ -54,7 +55,8 @@ O frontend foi desenvolvido com as melhores práticas de design moderno, apresen
 ## 🔒 Segurança & Controle (Checklist Realizado)
 
 - **RBAC (Role-Based Access Control):** Controle de acesso rigoroso baseado em perfis. O primeiro usuário a se cadastrar recebe o papel `ROLE_SINDICO`; cadastros posteriores ganham automaticamente `ROLE_MORADOR`.
-- **Autenticação Stateless:** Sessões dinâmicas gerenciadas através de tokens JWT (`Bearer`) com interceptador Axios no frontend para injeção automática e tratamento de expiração (401).
+- **Tratamento de Autenticação Segura (Custom EntryPoint):** O backend agora utiliza um `AuthenticationEntryPoint` customizado para mapear de forma explícita falhas de autenticação (como tokens expirados ou ausentes) como **HTTP 401 Unauthorized** (ao invés de 403 genérico), desacoplando a expiração de sessão das páginas legítimas de acesso negado simples.
+- **Autenticação Stateless:** Sessões dinâmicas gerenciadas através de tokens JWT (`Bearer`) com interceptador Axios no frontend para injeção automática e tratamento inteligente de expiração.
 - **Criptografia de Senhas:** Armazenamento seguro de senhas por meio de hash BCrypt nativo do Spring Security (`PasswordEncoder`).
 - **Upload Seguro de Arquivos:** Imagens enviadas passam por validação MIME rígida no backend e são salvas com nomes mascarados por UUID para prevenir Directory Traversal.
 - **Prevenção de SQL Injection:** Queries parametrizadas geradas de forma nativa pelas interfaces do Spring Data JPA.
