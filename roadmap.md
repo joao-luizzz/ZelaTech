@@ -34,3 +34,13 @@ Este documento descreve as melhorias, integrações e novas funcionalidades plan
 *   **Taxa Condominial Digital:**
     *   Integração com APIs de gateway de pagamento (Stripe, Asaas ou Efí) para disponibilização direta de Pix e boletos bancários da taxa de condomínio.
     *   Visualização e download de 2ª via de faturas em aberto no painel do morador.
+
+## ⚖️ 6. Mediação de Conflitos & Gestão de Infrações (Multas e Advertências)
+*   **Registro de Ocorrências e Infrações:**
+    *   Painel do Síndico para registro formal de descumprimentos do Regimento Interno (ex: poluição sonora após horário permitido, destinação inadequada de resíduos ou danos à infraestrutura).
+    *   Possibilidade de anexar fotos, depoimentos e relatórios como evidências.
+*   **Gradação e Aplicação de Penalidades:**
+    *   Parametrização de advertências formais e aplicação automatizada de multas de forma escalonada (Notificação -> Advertência -> Multa -> Reincidência com fator multiplicador).
+*   **Notificação Integrada e Direito de Recurso:**
+    *   Disparo imediato de e-mails e alertas em tempo real ao condômino infrator.
+    *   Aba de contestação, na qual o morador pode redigir e anexar sua defesa prévia para apreciação do conselho diretivo ou votação em assembleia antes do lançamento da cobrança na fatura mensal.
