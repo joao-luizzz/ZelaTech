@@ -15,6 +15,9 @@ export default function Login() {
   const { login } = useAuth();
   const { theme, toggleTheme } = useTheme();
 
+  // Função responsável por processar o login.
+  // Chama o AuthContext para validar credenciais na API e redireciona
+  // o usuário de acordo com o seu perfil (SINDICO ou MORADOR). (Andrey)
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
@@ -34,6 +37,7 @@ export default function Login() {
     }
   };
 
+  // Limpa o estado e volta à tela de seleção de perfil. (Andrey)
   const handleBack = () => {
     setSelectedProfile(null);
     setError('');

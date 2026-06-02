@@ -43,10 +43,13 @@ export default function MeusChamados() {
   const [filtro, setFiltro] = useState('TODOS');
   const navigate = useNavigate();
 
+  // Dispara a busca inicial dos chamados do morador logado ao carregar a tela. (Andrey)
   useEffect(() => {
     fetchChamados();
   }, []);
 
+  // Faz a requisição HTTP (GET) para buscar a lista de chamados.
+  // Atualiza os estados de loading e erro adequadamente. (Andrey)
   const fetchChamados = async () => {
     try {
       setLoading(true);
@@ -71,6 +74,8 @@ export default function MeusChamados() {
     return cores[categoria] || 'bg-muted-foreground';
   };
 
+  // Lógica de filtro local (client-side) para evitar chamadas redundantes à API.
+  // Filtra o array de chamados no frontend baseado no botão selecionado. (Andrey)
   const chamadosFiltrados = chamados.filter((chamado) => {
     if (filtro === 'PENDENTES') return chamado.status === 'ABERTO' || chamado.status === 'EM_ANDAMENTO';
     if (filtro === 'RESOLVIDOS') return chamado.status === 'RESOLVIDO' || chamado.status === 'CONCLUIDO';
