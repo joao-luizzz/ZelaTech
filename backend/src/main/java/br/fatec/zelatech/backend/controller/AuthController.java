@@ -39,6 +39,21 @@ public class AuthController {
     }
 
     /**
+     * POST /api/v1/auth/cadastro/sindico
+     * Rota pública — cadastro de síndico com envio de documentos.
+     */
+    @PostMapping(value = "/cadastro/sindico", consumes = {"multipart/form-data"})
+    public ResponseEntity<Map<String, String>> cadastrarSindico(@Valid @ModelAttribute br.fatec.zelatech.backend.dto.auth.CadastroSindicoRequestDTO dto) throws java.io.IOException {
+        Usuario usuario = usuarioService.cadastrarSindico(dto);
+        return ResponseEntity
+                .status(HttpStatus.CREATED)
+                .body(Map.of(
+                        "mensagem", "Solicitação de cadastro de síndico enviada com sucesso! Aguarde a aprovação do administrador.",
+                        "perfil", usuario.getPerfil().name()
+                ));
+    }
+
+    /**
      * POST /api/v1/auth/login
      * Rota pública — retorna o token JWT para uso nas próximas requisições.
      */

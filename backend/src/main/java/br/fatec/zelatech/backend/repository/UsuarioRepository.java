@@ -10,4 +10,5 @@ import java.util.Optional;
 public interface UsuarioRepository extends JpaRepository<Usuario, Long> {
     Optional<Usuario> findByEmail(String email);
     boolean existsByEmail(String email);
+    java.util.List<br.fatec.zelatech.backend.model.Usuario> findByPerfil(br.fatec.zelatech.backend.model.enums.Perfil perfil);
 }
