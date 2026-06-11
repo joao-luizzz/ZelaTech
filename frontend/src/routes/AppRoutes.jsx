@@ -19,6 +19,7 @@ import MinhasReservas from '../pages/morador/MinhasReservas';
 
 // Síndico
 import DashboardSindico from '../pages/sindico/DashboardSindico';
+import PainelIndicadores from '../pages/sindico/PainelIndicadores';
 import GerenciarMural from '../pages/sindico/GerenciarMural';
 import GerenciarAreas from '../pages/sindico/GerenciarAreas';
 
@@ -58,6 +59,7 @@ export const AppRoutes = () => {
           <Route path="/sindico/dashboard" element={<DashboardSindico />} />
           <Route path="/sindico/mural" element={<GerenciarMural />} />
           <Route path="/sindico/areas" element={<GerenciarAreas />} />
+          <Route path="/sindico/indicadores" element={<PainelIndicadores />} />
         </Route>
 
         {/* Rotas apenas para ADMIN */}
