@@ -13,6 +13,7 @@ import MainLayout from '../components/layout/MainLayout';
 // Morador
 import DashboardMorador from '../pages/morador/DashboardMorador';
 import MeusChamados from '../pages/morador/MeusChamados';
+import MinhasFaturas from '../pages/morador/MinhasFaturas';
 import NovoChamado from '../pages/morador/NovoChamado';
 import ReservarArea from '../pages/morador/ReservarArea';
 import MinhasReservas from '../pages/morador/MinhasReservas';
@@ -22,6 +23,7 @@ import DashboardSindico from '../pages/sindico/DashboardSindico';
 import PainelIndicadores from '../pages/sindico/PainelIndicadores';
 import GerenciarMural from '../pages/sindico/GerenciarMural';
 import GerenciarAreas from '../pages/sindico/GerenciarAreas';
+import FinanceiroSindico from '../pages/sindico/FinanceiroSindico';
 
 // Shared
 import DetalheChamado from '../pages/shared/DetalheChamado';
@@ -52,6 +54,7 @@ export const AppRoutes = () => {
           <Route path="/morador/chamados/novo" element={<NovoChamado />} />
           <Route path="/morador/reservas/nova" element={<ReservarArea />} />
           <Route path="/morador/reservas" element={<MinhasReservas />} />
+          <Route path="/morador/financeiro" element={<MinhasFaturas />} />
         </Route>
 
         {/* Rotas apenas para SINDICO */}
@@ -60,6 +63,7 @@ export const AppRoutes = () => {
           <Route path="/sindico/mural" element={<GerenciarMural />} />
           <Route path="/sindico/areas" element={<GerenciarAreas />} />
           <Route path="/sindico/indicadores" element={<PainelIndicadores />} />
+          <Route path="/sindico/financeiro" element={<FinanceiroSindico />} />
         </Route>
 
         {/* Rotas apenas para ADMIN */}

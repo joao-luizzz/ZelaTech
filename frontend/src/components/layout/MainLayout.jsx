@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Outlet, Link, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
 import { useTheme } from '../../contexts/ThemeContext';
-import { Menu, Home, LogOut, FileText, PlusCircle, Bell, X, Building2, Sun, Moon, ShieldCheck, Map, Calendar, CalendarDays, BarChart2 } from 'lucide-react';
+import { Menu, Home, LogOut, FileText, PlusCircle, Bell, X, Building2, Sun, Moon, ShieldCheck, Map, Calendar, CalendarDays, BarChart2, DollarSign } from 'lucide-react';
 import clsx from 'clsx';
 
 export default function MainLayout() {
@@ -27,6 +27,7 @@ export default function MainLayout() {
           { name: 'Mural de Avisos', path: '/sindico/mural', icon: Bell },
           { name: 'Áreas Comuns', path: '/sindico/areas', icon: Map },
           { name: 'Indicadores', path: '/sindico/indicadores', icon: BarChart2 },
+          { name: 'Financeiro', path: '/sindico/financeiro', icon: DollarSign },
         ]
       : [
           { name: 'Início', path: '/morador/dashboard', icon: Home },
@@ -34,6 +35,7 @@ export default function MainLayout() {
           { name: 'Novo Chamado', path: '/morador/chamados/novo', icon: PlusCircle },
           { name: 'Reservar Espaço', path: '/morador/reservas/nova', icon: Calendar },
           { name: 'Minhas Reservas', path: '/morador/reservas', icon: CalendarDays },
+          { name: 'Minhas Faturas', path: '/morador/financeiro', icon: DollarSign },
         ];
 
   return (
