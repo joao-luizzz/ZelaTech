@@ -9,6 +9,7 @@ export default function Cadastro() {
   const [formData, setFormData] = useState({
     nome: '',
     email: '',
+    cpf: '',
     senha: '',
     apartamento: ''
   });
@@ -60,6 +61,7 @@ export default function Cadastro() {
         const formDataPayload = new FormData();
         formDataPayload.append('nome', formData.nome);
         formDataPayload.append('email', formData.email);
+        formDataPayload.append('cpf', formData.cpf);
         formDataPayload.append('senha', formData.senha);
         formDataPayload.append('apartamento', formData.apartamento);
         formDataPayload.append('ataEleicao', arquivos.ataEleicao);
@@ -176,6 +178,24 @@ export default function Cadastro() {
                 onChange={handleChange}
                 className="w-full bg-background border border-border rounded-lg pl-10 pr-4 py-3 text-foreground focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-colors"
                 placeholder="seu@email.com"
+              />
+            </div>
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-card-foreground mb-2">CPF</label>
+            <div className="relative">
+              <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-muted-foreground">
+                <FileText size={18} />
+              </div>
+              <input 
+                type="text" 
+                name="cpf"
+                required
+                value={formData.cpf}
+                onChange={handleChange}
+                className="w-full bg-background border border-border rounded-lg pl-10 pr-4 py-3 text-foreground focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-colors"
+                placeholder="Apenas números"
               />
             </div>
           </div>

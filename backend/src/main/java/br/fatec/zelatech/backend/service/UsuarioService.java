@@ -44,6 +44,7 @@ public class UsuarioService {
         Usuario novoUsuario = new Usuario();
         novoUsuario.setNome(dto.nome());
         novoUsuario.setEmail(dto.email());
+        novoUsuario.setCpf(dto.cpf());
         novoUsuario.setSenha(passwordEncoder.encode(dto.senha()));
         novoUsuario.setApartamento(dto.apartamento());
         novoUsuario.setPerfil(perfil);
@@ -69,6 +70,7 @@ public class UsuarioService {
         Usuario novoUsuario = new Usuario();
         novoUsuario.setNome(dto.getNome());
         novoUsuario.setEmail(dto.getEmail());
+        novoUsuario.setCpf(dto.getCpf());
         novoUsuario.setSenha(passwordEncoder.encode(dto.getSenha()));
         novoUsuario.setApartamento(dto.getApartamento());
         novoUsuario.setPerfil(Perfil.MORADOR); // Começa como MORADOR até ser aprovado
