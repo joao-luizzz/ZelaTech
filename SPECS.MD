@@ -19,9 +19,12 @@ O projeto utiliza uma arquitetura **desacoplada**, separando completamente as re
 | Segurança | Spring Security + JWT | — |
 | Persistência | Spring Data JPA (Hibernate) | — |
 | Banco de Dados | MySQL | 8.0+ |
+| Mensageria Real-Time | WebSockets (STOMP / SockJS) | — |
+| E-mail | Spring Mail (JavaMailSender) | — |
+| Gateway de Pagamento | API Asaas (Sandbox) | — |
 | Framework Frontend | React (Vite) | 18+ |
-| Estilização | Tailwind CSS | 3.4+ |
-| Comunicação | Axios | — |
+| Estilização | Tailwind CSS | 4.x |
+| Comunicação HTTP | Axios | — |
 
 ---
 
@@ -73,6 +76,59 @@ O projeto utiliza uma arquitetura **desacoplada**, separando completamente as re
 | `data_publicacao` | DATETIME | Sim | Registrado automaticamente |
 | `sindico_id` | INT (FK → usuario.id) | Sim | Síndico que publicou |
 
+### 3.5 AreaComum
+
+| Atributo | Tipo SQL | Obrigatório | Observação |
+|----------|----------|-------------|----------|
+| `id` | INT (PK, AUTO_INCREMENT) | Sim | — |
+| `nome` | VARCHAR(100) | Sim | Ex: Salão de Festas, Churrasqueira |
+| `descricao` | VARCHAR(500) | Não | Descrição da área |
+| `capacidade` | INT | Não | Lotação máxima |
+| `ativa` | BOOLEAN | Sim | Padrão: `true` |
+
+### 3.6 Reserva
+
+| Atributo | Tipo SQL | Obrigatório | Observação |
+|----------|----------|-------------|----------|
+| `id` | INT (PK, AUTO_INCREMENT) | Sim | — |
+| `area_comum_id` | INT (FK → area_comum.id) | Sim | Área reservada |
+| `usuario_id` | INT (FK → usuario.id) | Sim | Morador que fez a reserva |
+| `data_reserva` | DATE | Sim | Data da ocupação |
+| `horario_inicio` | TIME | Sim | Horário de início |
+| `horario_fim` | TIME | Sim | Horário de término |
+| `status` | ENUM('PENDENTE','CONFIRMADA','CANCELADA') | Sim | Padrão: `PENDENTE` |
+
+### 3.7 Fatura
+
+| Atributo | Tipo SQL | Obrigatório | Observação |
+|----------|----------|-------------|----------|
+| `id` | INT (PK, AUTO_INCREMENT) | Sim | — |
+| `usuario_id` | INT (FK → usuario.id) | Sim | Morador devedor |
+| `descricao` | VARCHAR(255) | Sim | Ex: Taxa Condominial Jun/2026 |
+| `valor` | DECIMAL(10,2) | Sim | Valor em reais |
+| `vencimento` | DATE | Sim | Data de vencimento |
+| `status` | ENUM('PENDENTE','PAGA','VENCIDA') | Sim | Atualizado via Webhook |
+| `gateway_id` | VARCHAR(100) | Não | ID da cobrança no Asaas |
+| `link_pagamento` | TEXT | Não | Link gerado pelo Asaas |
+| `qr_code_pix` | TEXT | Não | Base64 do QR Code Pix |
+| `pix_copia_cola` | VARCHAR(2000) | Não | Payload do Pix Copia e Cola |
+
+### 3.8 Infracao
+
+| Atributo | Tipo SQL | Obrigatório | Observação |
+|----------|----------|-------------|----------|
+| `id` | INT (PK, AUTO_INCREMENT) | Sim | — |
+| `infrator_id` | INT (FK → usuario.id) | Sim | Morador infrator |
+| `tipo` | ENUM('BARULHO','LIXO','INFRAESTRUTURA',...) | Sim | Categoria da infração |
+| `gravidade` | ENUM('LEVE','MEDIA','GRAVE','GRAVISSIMA') | Sim | Graduação da penalidade |
+| `descricao` | TEXT | Sim | Relato do síndico |
+| `valor_multa` | DECIMAL(10,2) | Não | Valor se houver multa associada |
+| `status` | ENUM('ADVERTENCIA_GERADA','MULTA_APLICADA','EM_RECURSO','RECURSO_ACEITO','RECURSO_NEGADO','CANCELADA') | Sim | Ciclo de vida da infração |
+| `foto_evidencia` | TEXT | Não | Base64 da foto do síndico |
+| `justificativa_recurso` | TEXT | Não | Texto de defesa do morador |
+| `anexo_recurso` | TEXT | Não | Base64 do arquivo de prova do morador |
+| `data_criacao` | DATETIME | Sim | Registrado automaticamente |
+
 ---
 
 ## 4. Endpoints da API REST
@@ -101,6 +157,35 @@ A base URL de todos os endpoints está sob `/api/v1`.
 | `/chamados/{id}` | GET | Detalha as informações de um chamado e seu histórico | Todos |
 | `/chamados/{id}/status` | PATCH | Altera o status atual do chamado | Apenas Síndico |
 
+### Áreas Comuns e Reservas (`/api/v1/areas`, `/api/v1/reservas`)
+| Endpoint | Método | Descrição | Autenticação |
+|----------|--------|-----------|--------------|
+| `/areas` | GET | Lista todas as áreas comuns ativas | Todos |
+| `/areas` | POST | Cria nova área comum | Apenas Síndico |
+| `/areas/{id}` | PUT | Edita dados de uma área | Apenas Síndico |
+| `/reservas` | GET | Lista todas as reservas do condomínio | Apenas Síndico |
+| `/reservas/minhas` | GET | Lista as reservas do morador autenticado | Apenas Morador |
+| `/reservas` | POST | Cria uma nova reserva | Apenas Morador |
+| `/reservas/{id}/cancelar` | PATCH | Cancela uma reserva | Morador/Síndico |
+
+### Financeiro (`/api/v1/financeiro`)
+| Endpoint | Método | Descrição | Autenticação |
+|----------|--------|-----------|--------------|
+| `/financeiro/faturas` | GET | Lista todas as faturas do condomínio | Apenas Síndico |
+| `/financeiro/faturas/minhas` | GET | Lista as faturas do morador autenticado | Apenas Morador |
+| `/financeiro/faturas` | POST | Gera nova fatura via API do Asaas | Apenas Síndico |
+| `/financeiro/webhook` | POST | Recebe eventos de pagamento do Asaas | Pública (token de segurança) |
+
+### Infrações (`/api/v1/infracoes`)
+| Endpoint | Método | Descrição | Autenticação |
+|----------|--------|-----------|--------------|
+| `/infracoes` | GET | Lista todas as infrações do condomínio | Apenas Síndico |
+| `/infracoes/minhas` | GET | Lista as infrações do morador autenticado | Apenas Morador |
+| `/infracoes` | POST | Registra nova infração contra uma unidade | Apenas Síndico |
+| `/infracoes/{id}/recurso` | POST | Envia defesa/recurso para uma infração | Apenas Morador |
+| `/infracoes/{id}/julgar` | PATCH | Aceita ou rejeita o recurso do morador | Apenas Síndico |
+| `/infracoes/{id}/cancelar` | PATCH | Cancela uma infração | Apenas Síndico |
+
 ---
 
 ## 5. Regras de Negócio e Validações
@@ -117,6 +202,17 @@ ABERTO  ──>  EM_ANDAMENTO  ──>  RESOLVIDO
 *   **Leitura de Assinatura Binária:** O backend valida o cabeçalho binário (Magic Numbers) das fotos para confirmar se são de fato extensões de imagens válidas (`image/jpeg`, `image/png`), ignorando simples extensões no nome do arquivo.
 *   **Ofuscação de Nomes:** Os arquivos são salvos localmente mascarados por um UUID gerado em tempo de execução para evitar substituições e vazamento de caminhos do servidor.
 *   **Mapeamento de Recursos Estáticos (`WebMvcConfig`):** O backend expõe o endpoint `/uploads/chamados/**` mapeado de forma híbrida tanto para o diretório físico local de uploads do servidor quanto para o diretório `/seed-images/` do classpath do projeto.
+
+### Fluxo Financeiro (Asaas)
+*   **Criação de Cliente:** Antes de gerar uma cobrança, o sistema verifica se o morador já existe no Asaas pelo e-mail. Se não existir, cria automaticamente via `POST /customers`.
+*   **Cobrança Híbrida:** As faturas são criadas com tipo `UNDEFINED`, permitindo que o morador escolha entre Pix, Boleto ou Cartão no link gerado.
+*   **QR Code Pix Inline:** Imediatamente após a criação da fatura, o backend já busca e salva o Base64 do QR Code Pix para exibição inline no frontend sem dependência de URL externa.
+*   **Webhook Seguro:** O endpoint `/financeiro/webhook` valida o header `asaas-access-token` antes de processar qualquer evento de pagamento, e ao receber o evento `PAYMENT_RECEIVED`, baixa automaticamente a fatura no banco.
+
+### Fluxo de Infrações
+*   **Registro pelo Síndico:** Ao registrar uma infração, o sistema dispara automaticamente um e-mail e um alerta WebSocket para o morador infrator.
+*   **Recurso do Morador:** O morador pode enviar recurso somente enquanto a infração estiver nos status `ADVERTENCIA_GERADA` ou `MULTA_APLICADA`. O envio do recurso muda o status para `EM_RECURSO`.
+*   **Julgamento pelo Síndico:** O síndico pode aceitar (status → `RECURSO_ACEITO`) ou rejeitar (status → `RECURSO_NEGADO`) o recurso. O morador é notificado por e-mail e WebSocket em ambos os casos.
 
 ---
 

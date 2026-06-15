@@ -2,21 +2,22 @@
 
 ## 🧠 1. Contexto e Domínio
 
-Você está atuando como assistente de desenvolvimento para o **ZelaTech**, um sistema web moderno de gestão de chamados de manutenção para condomínios residenciais. 
-O projeto migrou para uma arquitetura baseada em **API RESTful** e **Single Page Application (SPA)**.
+Você está atuando como assistente de desenvolvimento para o **ZelaTech**, um sistema web completo de gestão condominial com módulos de chamados de manutenção, agendamento de áreas comuns, financeiro (integração Asaas), notificações em tempo real e mediação de conflitos (infrações e multas).
+O projeto utiliza uma arquitetura baseada em **API RESTful** e **Single Page Application (SPA)**.
 
 ### Stack obrigatória (não sugerir alternativas legadas)
-- **Back-end:** Java 17+, Spring Boot 3+, Spring Data JPA, Spring Security (JWT)
+- **Back-end:** Java 17+, Spring Boot 3+, Spring Data JPA, Spring Security (JWT), WebSockets (STOMP/SockJS)
 - **Banco de Dados:** MySQL 8+
-- **Front-end:** React (Vite ou Next.js), TypeScript, Tailwind CSS
-- **Integração:** Axios ou Fetch API
+- **Front-end:** React (Vite), JavaScript (ES6+), Tailwind CSS v4
+- **Integração:** Axios, API Asaas (Gateway de Pagamento)
 - **Segurança:** Autenticação via JWT, senhas com hash BCrypt
 
 ### Perfis de usuário (RBAC via Spring Security)
 | Perfil | Regra de criação | Permissões |
 |--------|-----------------|------------|
-| `ROLE_SINDICO` | Primeiro usuário cadastrado no sistema | Acesso total: gerencia chamados, altera status, publica/exclui avisos |
-| `ROLE_MORADOR` | Todos os cadastros subsequentes | Acesso restrito: abre chamados, vê apenas os próprios, lê o mural |
+| `ROLE_ADMIN` | Superusuário fixo do sistema | Aprovação e rejeição de cadastros de Síndicos |
+| `ROLE_SINDICO` | Aprovado pelo Admin | Acesso total: chamados, mural, áreas comuns, financeiro, infrações |
+| `ROLE_MORADOR` | Cadastro padrão aprovado | Acesso restrito: abertura de chamados, reservas, faturas, defesa de infrações |
 
 ### Regras de negócio inegociáveis
 1. O fluxo de status de chamado é **estritamente unidirecional**: `ABERTO` → `EM_ANDAMENTO` → `RESOLVIDO`. Retroceder é proibido e deve ser validado no nível de Service.

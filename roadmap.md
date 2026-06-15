@@ -55,8 +55,8 @@ Este documento descreve as melhorias, integrações e novas funcionalidades plan
 
 ---
 
-## 🟡 Fase 6: Mediação de Conflitos & Gestão de Infrações (Multas e Advertências)
-**Status:** `Em Andamento` | **Impacto:** Banco de Dados, API REST, UI
+## 🟢 Fase 6: Mediação de Conflitos & Gestão de Infrações (Multas e Advertências)
+**Status:** `Concluído` | **Impacto:** Banco de Dados, API REST, UI
 
 *   **Registro de Ocorrências e Infrações:**
     *   Painel do Síndico para registro formal de descumprimentos do Regimento Interno (ex: poluição sonora após horário permitido, destinação inadequada de resíduos ou danos à infraestrutura).
