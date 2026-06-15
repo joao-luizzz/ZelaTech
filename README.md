@@ -41,14 +41,18 @@ O frontend foi desenvolvido com as melhores práticas de design moderno, apresen
 
 ### 🏠 Área do Morador
 - **Mural Digital:** Visualização em tempo real de comunicados oficiais publicados pelo síndico.
-- **Abertura de Chamados:** Envio de ocorrências com título (máx. 100 caracteres), categoria (Elétrica, Hidráulica, etc.), descrição detalhada (máx. 500 caracteres), nível de prioridade e anexo opcional de **imagem/foto probatória**.
-- **Meus Chamados:** Acompanhamento dinâmico das próprias solicitações organizadas em cards visuais responsivos com bordas coloridas semânticas e barra de progresso.
+- **Abertura de Chamados (Fase 3):** Envio de ocorrências de manutenção (Elétrica, Hidráulica, etc.) com anexo de imagens. Acompanhamento dinâmico com **notificações via WebSocket** e alertas por **E-mail**.
+- **Agendamento de Áreas Comuns (Fase 2):** Sistema inteligente de reservas (Churrasqueira, Salão de Festas, etc.) com prevenção de conflitos de datas e limites de agendamento por unidade.
+- **Módulo Financeiro (Fase 5):** Consulta e pagamento da taxa condominial e multas. Integração direta com a **API do Asaas Sandbox** com exibição de **QR Code Pix** na tela e conversão automática de pendências após o pagamento.
+- **Defesa de Infrações (Fase 6):** Visualização de notificações, advertências ou multas aplicadas à unidade, com formulário dedicado para **apresentar recurso e enviar provas de defesa**.
 
-### 👑 Área do Síndico
-- **Painel Administrativo:** Visão global e controle centralizado de todos os chamados abertos no condomínio.
-- **Filtros Avançados:** Busca ágil de chamados por categoria e status atual.
-- **Gestão de Status:** Avanço do ciclo de vida dos chamados (`Aberto` ➡️ `Em Andamento` ➡️ `Resolvido`) com registro imutável no histórico para auditoria.
-- **Mural de Avisos:** Criação rápida e exclusão imediata de comunicados importantes.
+### 👑 Área do Síndico / Gestão
+- **Painel de Chamados:** Visão global com gestão do ciclo de vida dos chamados (`Aberto` ➡️ `Em Andamento` ➡️ `Resolvido`).
+- **Dashboard de Métricas BI (Fase 4):** Gráficos avançados que exibem a volumetria de chamados por categoria, SLA (Tempo Médio de Atendimento) e evolução financeira de arrecadações.
+- **Gestão de Espaços Compartilhados (Fase 2):** Criação, edição e controle de status (Ativo/Inativo) das áreas comuns do prédio.
+- **Gestão Financeira & Inadimplência (Fase 5):** Painel para disparo de faturas ativas, consulta do histórico de adimplência do condomínio e processamento seguro via **Webhooks**.
+- **Mediação de Conflitos & Multas (Fase 6):** Registro oficial de quebras do regimento interno (com anexo de fotos) e ferramenta para **julgamento de recursos**, garantindo a ampla defesa aos moradores.
+- **Aprovação de Síndicos (Fase 1):** Painel Master (Super Administrador) com auditoria para aprovar ou rejeitar o acesso de novos síndicos mediante checagem de documentação legal (Ata de Eleição).
 
 ---
 
