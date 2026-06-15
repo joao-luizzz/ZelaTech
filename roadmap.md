@@ -25,8 +25,8 @@ Este documento descreve as melhorias, integrações e novas funcionalidades plan
 
 ---
 
-## 🔴 Fase 3: Notificações Multicanal (Push & E-mail)
-**Status:** `Planejado` | **Impacto:** API REST, Serviços Externos, UI
+## 🟢 Fase 3: Notificações Multicanal (Push & E-mail)
+**Status:** `Concluído` | **Impacto:** API REST, Serviços Externos, UI
 
 *   **Alertas em Tempo Real:**
     *   Integração via WebSockets para atualização instantânea dos chamados em tela, dispensando o recarregamento manual da página.
@@ -36,8 +36,8 @@ Este documento descreve as melhorias, integrações e novas funcionalidades plan
 
 ---
 
-## 🔴 Fase 4: Painel de Indicadores & Métricas (BI)
-**Status:** `Planejado` | **Impacto:** Banco de Dados (Queries Otimizadas), UI
+## 🟢 Fase 4: Painel de Indicadores & Métricas (BI)
+**Status:** `Concluído` | **Impacto:** Banco de Dados (Queries Otimizadas), UI
 
 *   **Métricas para Gestão Condominial:**
     *   Geração de gráficos de incidência para acompanhamento de categorias mais solicitadas (Elétrica, Hidráulica, Infraestrutura).
@@ -46,8 +46,8 @@ Este documento descreve as melhorias, integrações e novas funcionalidades plan
 
 ---
 
-## 🔴 Fase 5: Módulo Financeiro & Integração de Cobranças
-**Status:** `Planejado` | **Impacto:** Banco de Dados, API REST, Gateway de Pagamento, UI
+## 🟢 Fase 5: Módulo Financeiro & Integração de Cobranças
+**Status:** `Concluído` | **Impacto:** Banco de Dados, API REST, Gateway de Pagamento, UI
 
 *   **Taxa Condominial Digital:**
     *   Integração com APIs de gateway de pagamento (Stripe, Asaas ou Efí) para disponibilização direta de Pix e boletos bancários da taxa de condomínio.
@@ -55,8 +55,8 @@ Este documento descreve as melhorias, integrações e novas funcionalidades plan
 
 ---
 
-## 🔴 Fase 6: Mediação de Conflitos & Gestão de Infrações (Multas e Advertências)
-**Status:** `Planejado` | **Impacto:** Banco de Dados, API REST, UI
+## 🟡 Fase 6: Mediação de Conflitos & Gestão de Infrações (Multas e Advertências)
+**Status:** `Em Andamento` | **Impacto:** Banco de Dados, API REST, UI
 
 *   **Registro de Ocorrências e Infrações:**
     *   Painel do Síndico para registro formal de descumprimentos do Regimento Interno (ex: poluição sonora após horário permitido, destinação inadequada de resíduos ou danos à infraestrutura).
