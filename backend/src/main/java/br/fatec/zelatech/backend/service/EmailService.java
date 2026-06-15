@@ -54,4 +54,19 @@ public class EmailService {
             System.err.println("Erro ao enviar email para o morador: " + e.getMessage());
         }
     }
+
+    public void enviarEmailSimples(String destinatario, String assunto, String corpo) {
+        try {
+            MimeMessage message = mailSender.createMimeMessage();
+            MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
+            
+            helper.setTo(destinatario);
+            helper.setSubject(assunto);
+            helper.setText(corpo.replace("\n", "<br>"), true);
+            
+            mailSender.send(message);
+        } catch (MessagingException e) {
+            System.err.println("Erro ao enviar email simples: " + e.getMessage());
+        }
+    }
 }
