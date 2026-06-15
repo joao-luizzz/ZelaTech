@@ -1,0 +1,11 @@
+# Scripts Utilitários
+commit_phases.sh
+test_cpf.py
+
+# Logs e arquivos temporários
+backend/backend_logs.txt
+*.log
+
+# Arquivos de Sistema
+.DS_Store
+Thumbs.db
