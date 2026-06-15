@@ -11,10 +11,13 @@ export default function DashboardMorador() {
   const [error, setError] = useState('');
   const navigate = useNavigate();
 
+  // Dispara a busca inicial de avisos assim que o componente é montado na tela. (Andrey)
   useEffect(() => {
     fetchAvisos();
   }, []);
 
+  // Faz a requisição HTTP para a API buscando a lista de avisos atualizada.
+  // Gerencia as flags de loading e erro para feedback visual. (Andrey)
   const fetchAvisos = async () => {
     try {
       setLoading(true);

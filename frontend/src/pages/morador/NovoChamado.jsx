@@ -18,7 +18,8 @@ export default function NovoChamado() {
 
   const navigate = useNavigate();
 
-  // Lida com a seleção do arquivo de foto
+  // Captura o arquivo de imagem selecionado pelo usuário e atualiza o estado 'foto'.
+  // Esta imagem será anexada no payload de envio da API. (Andrey)
   const handleFotoChange = (e) => {
     const arquivo = e.target.files[0];
     if (arquivo) {
@@ -26,7 +27,9 @@ export default function NovoChamado() {
     }
   };
 
-  // Submete o formulário montando um FormData (multipart/form-data) via chamadoService
+  // Monta e envia o formulário usando a interface FormData (multipart/form-data).
+  // Isso é obrigatório pois estamos enviando um arquivo binário (foto) junto com campos de texto.
+  // Gerencia todo o ciclo de feedback visual (loading, erro, sucesso e redirecionamento). (Andrey)
   const handleSubmit = async (e) => {
     e.preventDefault();
     setErro(null);

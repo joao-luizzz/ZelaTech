@@ -25,6 +25,7 @@ export default function Cadastro() {
   const navigate = useNavigate();
   const { theme, toggleTheme } = useTheme();
 
+  // Atualiza o estado do formulário dinamicamente. (Andrey)
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value }));
@@ -37,6 +38,8 @@ export default function Cadastro() {
     }
   };
 
+  // Envia os dados para a API (authService) e gerencia o ciclo
+  // de vida do envio (loading, sucesso, erro). (Andrey)
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
