@@ -1,10 +1,13 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { chamadoService } from '../../services/chamadoService';
 import { format, parseISO } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 import { FileText, Plus, Loader2, AlertCircle, Clock, CheckCircle2, AlertTriangle, ArrowLeft } from 'lucide-react';
 import clsx from 'clsx';
+import { useAuth } from '../../contexts/AuthContext';
+import { useWebSocket } from '../../contexts/WebSocketContext';
+import { useToast } from '../../hooks/useToast';
 
 const StatusBadge = ({ status }) => {
   const styles = {
@@ -42,7 +45,11 @@ export default function MeusChamados() {
   const [error, setError] = useState('');
   const [filtro, setFiltro] = useState('TODOS');
   const navigate = useNavigate();
+  const { user } = useAuth();
+  const { subscribe, isConnected } = useWebSocket();
+  const { showToast } = useToast();
 
+  const fetchChamados = useCallback(async () => {
   // Dispara a busca inicial dos chamados do morador logado ao carregar a tela. (Andrey)
   useEffect(() => {
     fetchChamados();
@@ -61,7 +68,27 @@ export default function MeusChamados() {
     } finally {
       setLoading(false);
     }
-  };
+  }, []);
+
+  useEffect(() => {
+    fetchChamados();
+  }, []);
+
+  useEffect(() => {
+    if (!user || !user.id || !isConnected) return;
+    
+    const sub = subscribe(`/queue/notifications/${user.id}`, (msg) => {
+      showToast(msg.titulo + ' - ' + msg.mensagem, 'info');
+      // Delay adicionado para aguardar o commit da transação no banco de dados do backend
+      setTimeout(() => {
+        fetchChamados();
+      }, 500);
+    });
+    
+    return () => {
+      if (sub) sub.unsubscribe();
+    }
+  }, [user, isConnected, subscribe, showToast, fetchChamados]);
 
   const getCorCategoria = (categoria) => {
     const cores = {

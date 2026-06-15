@@ -38,3 +38,6 @@ out/
 
 # Environment variables
 .env
+
+# Uploads dos Usuários
+uploads/

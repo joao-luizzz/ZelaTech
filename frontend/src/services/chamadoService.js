@@ -2,17 +2,17 @@ import api from './api';
 
 export const chamadoService = {
   async getMeusChamados() {
-    const response = await api.get('/chamados/meus');
+    const response = await api.get('/chamados/meus', { params: { _t: Date.now() } });
     return response.data;
   },
 
   async getAllChamados() {
-    const response = await api.get('/chamados');
+    const response = await api.get('/chamados', { params: { _t: Date.now() } });
     return response.data;
   },
 
   async getChamadoById(id) {
-    const response = await api.get(`/chamados/${id}`);
+    const response = await api.get(`/chamados/${id}`, { params: { _t: Date.now() } });
     return response.data;
   },
 

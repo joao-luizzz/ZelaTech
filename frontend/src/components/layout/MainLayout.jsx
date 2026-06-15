@@ -2,11 +2,11 @@ import React, { useState } from 'react';
 import { Outlet, Link, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
 import { useTheme } from '../../contexts/ThemeContext';
-import { Menu, Home, LogOut, FileText, PlusCircle, Bell, X, Building2, Sun, Moon } from 'lucide-react';
+import { Menu, Home, LogOut, FileText, PlusCircle, Bell, X, Building2, Sun, Moon, ShieldCheck, Map, Calendar, CalendarDays, BarChart2, DollarSign, Gavel, AlertTriangle } from 'lucide-react';
 import clsx from 'clsx';
 
 export default function MainLayout() {
-  const { user, logout, isSindico } = useAuth();
+  const { user, logout, isSindico, isAdmin } = useAuth();
   const { theme, toggleTheme } = useTheme();
   const navigate = useNavigate();
   const location = useLocation();
@@ -17,16 +17,28 @@ export default function MainLayout() {
     navigate('/login');
   };
 
-  const navItems = isSindico
+  const navItems = isAdmin 
     ? [
-        { name: 'Dashboard', path: '/sindico/dashboard', icon: Home },
-        { name: 'Mural de Avisos', path: '/sindico/mural', icon: Bell },
+        { name: 'Aprovações de Síndicos', path: '/admin/dashboard', icon: ShieldCheck }
       ]
-    : [
-        { name: 'Início', path: '/morador/dashboard', icon: Home },
-        { name: 'Meus Chamados', path: '/morador/chamados', icon: FileText },
-        { name: 'Novo Chamado', path: '/morador/chamados/novo', icon: PlusCircle },
-      ];
+    : isSindico
+      ? [
+          { name: 'Dashboard', path: '/sindico/dashboard', icon: Home },
+          { name: 'Mural de Avisos', path: '/sindico/mural', icon: Bell },
+          { name: 'Áreas Comuns', path: '/sindico/areas', icon: Map },
+          { name: 'Indicadores', path: '/sindico/indicadores', icon: BarChart2 },
+          { name: 'Financeiro', path: '/sindico/financeiro', icon: DollarSign },
+          { name: 'Infrações e Multas', path: '/sindico/infracoes', icon: Gavel },
+        ]
+      : [
+          { name: 'Início', path: '/morador/dashboard', icon: Home },
+          { name: 'Meus Chamados', path: '/morador/chamados', icon: FileText },
+          { name: 'Novo Chamado', path: '/morador/chamados/novo', icon: PlusCircle },
+          { name: 'Reservar Espaço', path: '/morador/reservas/nova', icon: Calendar },
+          { name: 'Minhas Reservas', path: '/morador/reservas', icon: CalendarDays },
+          { name: 'Minhas Faturas', path: '/morador/financeiro', icon: DollarSign },
+          { name: 'Minhas Ocorrências', path: '/morador/infracoes', icon: AlertTriangle },
+        ];
 
   return (
     <div className="min-h-screen bg-background flex flex-col md:flex-row text-foreground font-sans">
@@ -104,7 +116,7 @@ export default function MainLayout() {
             </div>
             <div className="overflow-hidden">
               <p className="text-sm font-medium text-foreground truncate">{user?.nome || 'Usuário'}</p>
-              <p className="text-xs text-muted-foreground truncate">{user?.role === 'ROLE_SINDICO' ? 'Síndico' : 'Morador'}</p>
+              <p className="text-xs text-muted-foreground truncate">{user?.role === 'ROLE_SINDICO' ? 'Síndico' : user?.role === 'ROLE_ADMIN' ? 'Admin' : 'Morador'}</p>
             </div>
           </div>
           <button

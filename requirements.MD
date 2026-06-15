@@ -17,7 +17,11 @@
 | **RF11** | Listagem Geral de Chamados | Visualizar todos os chamados do condomínio com filtros por status e categoria. | Síndico | Alta |
 | **RF12** | Atualização de Status | Alterar o status de um chamado seguindo o fluxo `ABERTO → EM_ANDAMENTO → RESOLVIDO`. Toda alteração deve registrar data/hora no histórico. O status não pode retroceder. | Síndico | Alta |
 | **RF13** | Histórico de Status | Registrar cada alteração de status com status anterior, novo status, data/hora e identificação do autor da alteração. | Sistema | Alta |
-| **RF14** | Validação de Dados | Bloquear submissão com campos obrigatórios vazios, e-mails com formato inválido, e-mails já cadastrados e arquivos acima de 5MB ou com tipo MIME inválido. | Sistema | Média |
+| **RF14** | Notificações Real-Time | Disparar alertas imediatos via WebSockets e E-mail quando status de chamados e multas são alterados. | Sistema | Média |
+| **RF15** | Agendamento de Áreas | Reservar áreas comuns evitando conflitos de horários e exibindo calendário interativo. | Morador | Média |
+| **RF16** | Módulo Financeiro | Geração de faturas via integração com API do Asaas, gerando QR Code Pix e baixando pagamentos automaticamente via Webhooks. | Síndico | Alta |
+| **RF17** | Gestão de Infrações | Registrar advertências e multas contra unidades, permitindo recurso/defesa online do morador. | Síndico/Morador | Média |
+| **RF18** | Validação de Dados | Bloquear submissão com campos obrigatórios vazios, validação de CPF (Módulo 11) e extensões de arquivo válidas. | Sistema | Média |
 
 ---
 
@@ -44,12 +48,8 @@
 Os itens abaixo **não serão desenvolvidos** neste projeto:
 
 - Aplicativo móvel nativo (Android/iOS)
-- Integração com sistemas de pagamento de condomínio
 - Chat em tempo real entre moradores e síndico
-- Relatórios com gráficos ou exportação em PDF
-- Notificações por e-mail ou SMS
 - Edição de avisos já publicados (apenas criação e exclusão)
-- Cadastro de novo Síndico por outro Síndico após o primeiro cadastro (fora do escopo da disciplina)
 
 ---
 

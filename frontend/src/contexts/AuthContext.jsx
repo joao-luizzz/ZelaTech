@@ -37,6 +37,7 @@ export const AuthProvider = ({ children }) => {
     isAuthenticated: !!user,
     isSindico: user?.role === 'ROLE_SINDICO',
     isMorador: user?.role === 'ROLE_MORADOR',
+    isAdmin: user?.role === 'ROLE_ADMIN',
     login,
     logout
   };

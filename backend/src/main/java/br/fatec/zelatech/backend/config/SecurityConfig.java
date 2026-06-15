@@ -64,6 +64,8 @@ public class SecurityConfig {
                 .requestMatchers("/api/v1/auth/**").permitAll()
                 .requestMatchers("/swagger-ui.html", "/swagger-ui/**", "/v3/api-docs/**").permitAll()
                 .requestMatchers("/uploads/**").permitAll()
+                .requestMatchers("/ws/**").permitAll()
+                .requestMatchers("/api/v1/webhooks/**").permitAll()
 
                 // ── Rotas específicas (devem vir antes das genéricas) ────────
                 .requestMatchers(HttpMethod.GET, "/api/v1/chamados").hasRole("SINDICO")

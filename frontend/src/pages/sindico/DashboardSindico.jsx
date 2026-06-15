@@ -1,7 +1,9 @@
 import clsx from 'clsx';
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import { chamadoService } from "../../services/chamadoService";
+import { useWebSocket } from '../../contexts/WebSocketContext';
+import { useToast } from '../../hooks/useToast';
 
 function DashboardSindico() {
 
@@ -17,22 +19,42 @@ function DashboardSindico() {
   const [filtroStatus, setFiltroStatus] = useState("TODOS");
   const [filtroCategoria, setFiltroCategoria] = useState("TODAS");
 
+  const { subscribe, isConnected } = useWebSocket();
+  const { showToast } = useToast();
+
+  const fetchChamados = useCallback(async () => {
+    try {
+      setLoading(true);
+      const data = await chamadoService.getAllChamados();
+      setChamados(data);
+    } catch (err) {
+      setError("Erro ao carregar chamados");
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
   // Ao carregar o componente, realizo uma consulta ao serviço para buscar todos
   // os chamados cadastrados e atualizar a interface com os dados recebidos. (Alexandre)
   useEffect(() => {
-    const fetchChamados = async () => {
-      try {
-        setLoading(true);
-        const data = await chamadoService.getAllChamados();
-        setChamados(data);
-      } catch (err) {
-        setError("Erro ao carregar chamados");
-      } finally {
-        setLoading(false);
-      }
-    };
     fetchChamados();
   }, []);
+
+  useEffect(() => {
+    if (!isConnected) return;
+
+    const sub = subscribe('/topic/chamados', (msg) => {
+      showToast(msg.titulo + ' - ' + msg.mensagem, 'info');
+      // Delay adicionado para aguardar o commit da transação no banco de dados do backend
+      setTimeout(() => {
+        fetchChamados();
+      }, 500);
+    });
+    
+    return () => {
+      if (sub) sub.unsubscribe();
+    }
+  }, [isConnected, subscribe, showToast, fetchChamados]);
 
   // Converte os status internos utilizados pelo sistema em textos mais amigáveis
   // para exibição na interface do usuário. (Alexandre)

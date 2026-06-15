@@ -27,6 +27,15 @@ export const authService = {
     return response.data;
   },
 
+  async registerSindico(formData) {
+    const response = await api.post('/auth/cadastro/sindico', formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    });
+    return response.data;
+  },
+
   logout() {
     localStorage.removeItem('@ZelaTech:token');
     localStorage.removeItem('@ZelaTech:user');

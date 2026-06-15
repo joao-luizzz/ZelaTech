@@ -38,6 +38,7 @@ public class ChamadoService {
     private final ChamadoRepository chamadoRepository;
     private final HistoricoStatusRepository historicoStatusRepository;
     private final UsuarioService usuarioService;
+    private final NotificationService notificationService;
 
     @Transactional
     public ChamadoResponseDTO abrir(ChamadoRequestDTO dto, String emailMorador) throws IOException {
@@ -57,7 +58,14 @@ public class ChamadoService {
         chamado.setFotoPath(fotoPath);
         chamado.setUsuario(morador);
 
-        return toResponseDTO(chamadoRepository.save(chamado));
+        Chamado chamadoSalvo = chamadoRepository.save(chamado);
+
+        // Notificar síndicos
+        usuarioService.buscarSindicos().forEach(sindico -> 
+            notificationService.processarAberturaChamado(chamadoSalvo, sindico)
+        );
+
+        return toResponseDTO(chamadoSalvo);
     }
 
     @Transactional(readOnly = true)
@@ -141,7 +149,11 @@ public class ChamadoService {
         historicoStatusRepository.save(historico);
 
         chamado.setStatus(statusNovo);
-        return toResponseDTO(chamadoRepository.save(chamado));
+        Chamado chamadoSalvo = chamadoRepository.save(chamado);
+
+        notificationService.processarMudancaStatus(chamadoSalvo, statusAtual);
+
+        return toResponseDTO(chamadoSalvo);
     }
 
     private static final List<String> MIME_TYPES_PERMITIDOS = List.of(
