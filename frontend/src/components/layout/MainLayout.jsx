@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Outlet, Link, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
 import { useTheme } from '../../contexts/ThemeContext';
-import { Menu, Home, LogOut, FileText, PlusCircle, Bell, X, Building2, Sun, Moon, ShieldCheck, Map, Calendar, CalendarDays, BarChart2, DollarSign } from 'lucide-react';
+import { Menu, Home, LogOut, FileText, PlusCircle, Bell, X, Building2, Sun, Moon, ShieldCheck, Map, Calendar, CalendarDays, BarChart2, DollarSign, Gavel, AlertTriangle } from 'lucide-react';
 import clsx from 'clsx';
 
 export default function MainLayout() {
@@ -28,6 +28,7 @@ export default function MainLayout() {
           { name: 'Áreas Comuns', path: '/sindico/areas', icon: Map },
           { name: 'Indicadores', path: '/sindico/indicadores', icon: BarChart2 },
           { name: 'Financeiro', path: '/sindico/financeiro', icon: DollarSign },
+          { name: 'Infrações e Multas', path: '/sindico/infracoes', icon: Gavel },
         ]
       : [
           { name: 'Início', path: '/morador/dashboard', icon: Home },
@@ -36,6 +37,7 @@ export default function MainLayout() {
           { name: 'Reservar Espaço', path: '/morador/reservas/nova', icon: Calendar },
           { name: 'Minhas Reservas', path: '/morador/reservas', icon: CalendarDays },
           { name: 'Minhas Faturas', path: '/morador/financeiro', icon: DollarSign },
+          { name: 'Minhas Ocorrências', path: '/morador/infracoes', icon: AlertTriangle },
         ];
 
   return (
