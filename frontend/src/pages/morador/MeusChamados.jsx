@@ -49,15 +49,9 @@ export default function MeusChamados() {
   const { subscribe, isConnected } = useWebSocket();
   const { showToast } = useToast();
 
-  const fetchChamados = useCallback(async () => {
-  // Dispara a busca inicial dos chamados do morador logado ao carregar a tela. (Andrey)
-  useEffect(() => {
-    fetchChamados();
-  }, []);
-
   // Faz a requisição HTTP (GET) para buscar a lista de chamados.
   // Atualiza os estados de loading e erro adequadamente. (Andrey)
-  const fetchChamados = async () => {
+  const fetchChamados = useCallback(async () => {
     try {
       setLoading(true);
       const data = await chamadoService.getMeusChamados();
@@ -70,9 +64,10 @@ export default function MeusChamados() {
     }
   }, []);
 
+  // Dispara a busca inicial dos chamados do morador logado ao carregar a tela. (Andrey)
   useEffect(() => {
     fetchChamados();
-  }, []);
+  }, [fetchChamados]);
 
   useEffect(() => {
     if (!user || !user.id || !isConnected) return;
