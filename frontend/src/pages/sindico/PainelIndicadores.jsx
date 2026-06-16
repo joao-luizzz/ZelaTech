@@ -194,53 +194,64 @@ export default function PainelIndicadores() {
       {/* Gráficos */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         
-        {/* Gráfico de Incidência por Categoria */}
+        {/* Gráfico Donut - Incidência por Categoria */}
         <div className="bg-card p-6 rounded-xl shadow-xl border border-border">
-          <h3 className="text-lg font-bold text-foreground mb-4">Incidência por Categoria</h3>
-          <div className="flex items-center justify-center gap-8">
-            <div className="relative w-48 h-48 flex-shrink-0">
+          <h3 className="text-lg font-bold text-foreground mb-6">Incidência por Categoria</h3>
+          <div className="flex flex-col items-center gap-6">
+            {/* Donut chart com tamanho correto */}
+            <div className="relative w-full" style={{ height: 220 }}>
               <ResponsiveContainer width="100%" height="100%">
                 <PieChart>
                   <Pie
                     data={metrics.chamadosPorCategoria}
                     cx="50%"
                     cy="50%"
-                    innerRadius={60}
+                    innerRadius={70}
                     outerRadius={100}
                     paddingAngle={3}
-                    label={false}
-                    labelLine={false}
                     dataKey="quantidade"
                     nameKey="categoria"
+                    label={false}
+                    labelLine={false}
                   >
                     {metrics.chamadosPorCategoria.map((entry, index) => (
-                      <Cell key={`cell-${index}`} fill={CORES_CATEGORIAS[index % CORES_CATEGORIAS.length]} />
+                      <Cell key={`cell-${index}`} fill={CORES_CATEGORIAS[index % CORES_CATEGORIAS.length]} stroke="transparent" />
                     ))}
                   </Pie>
-                  <RechartsTooltip 
-                    contentStyle={{ 
-                      backgroundColor: 'var(--card)', 
-                      border: '1px solid var(--border)', 
+                  <RechartsTooltip
+                    contentStyle={{
+                      backgroundColor: 'var(--card)',
+                      border: '1px solid var(--border)',
                       borderRadius: '8px',
                       color: 'var(--foreground)',
                       fontSize: '13px'
                     }}
+                    formatter={(value, name) => [value, name.toLowerCase()]}
                   />
                 </PieChart>
               </ResponsiveContainer>
+              {/* Label central sobreposta */}
               <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
-                <span className="text-2xl font-bold text-foreground">
+                <span className="text-3xl font-bold text-foreground">
                   {metrics.chamadosPorCategoria.reduce((s, c) => s + c.quantidade, 0)}
                 </span>
                 <span className="text-xs text-muted-foreground">chamados</span>
               </div>
             </div>
-            <div className="flex flex-col gap-3">
+            {/* Legenda customizada */}
+            <div className="w-full grid grid-cols-2 gap-x-6 gap-y-2.5">
               {metrics.chamadosPorCategoria.map((entry, index) => (
-                <div key={entry.categoria} className="flex items-center gap-3">
-                  <div className="w-2.5 h-2.5 rounded-full flex-shrink-0" style={{ backgroundColor: CORES_CATEGORIAS[index % CORES_CATEGORIAS.length] }} />
-                  <span className="text-sm text-muted-foreground capitalize">{entry.categoria.toLowerCase()}</span>
-                  <span className="text-sm font-bold text-foreground ml-auto pl-4">{entry.quantidade}</span>
+                <div key={entry.categoria} className="flex items-center gap-2 min-w-0">
+                  <div
+                    className="w-2.5 h-2.5 rounded-full flex-shrink-0"
+                    style={{ backgroundColor: CORES_CATEGORIAS[index % CORES_CATEGORIAS.length] }}
+                  />
+                  <span className="text-sm text-muted-foreground capitalize truncate">
+                    {entry.categoria.toLowerCase()}
+                  </span>
+                  <span className="text-sm font-bold text-foreground ml-auto pl-2 flex-shrink-0">
+                    {entry.quantidade}
+                  </span>
                 </div>
               ))}
             </div>
@@ -249,34 +260,66 @@ export default function PainelIndicadores() {
 
         {/* Gráfico de Barras - Volumetria de Status */}
         <div className="bg-card p-6 rounded-xl shadow-xl border border-border">
-          <h3 className="text-lg font-bold text-foreground mb-4">Volumetria por Status</h3>
-          <div className="h-80 w-full">
+          <h3 className="text-lg font-bold text-foreground mb-6">Volumetria por Status</h3>
+          <div className="h-64 w-full">
             <ResponsiveContainer width="100%" height="100%">
               <BarChart
                 data={metrics.chamadosPorStatus}
-                margin={{ top: 20, right: 30, left: 20, bottom: 5 }}
-                barSize={48}
+                margin={{ top: 24, right: 16, left: -10, bottom: 4 }}
+                barCategoryGap="40%"
+                barSize={52}
               >
-                <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="rgba(255,255,255,0.06)" />
-                <XAxis dataKey="status" tick={{ fill: 'var(--muted-foreground)', fontSize: 12 }} axisLine={false} tickLine={false} />
-                <YAxis tick={{ fill: 'var(--muted-foreground)', fontSize: 12 }} axisLine={false} tickLine={false} />
-                <RechartsTooltip 
-                  cursor={{fill: 'var(--border)'}}
-                  contentStyle={{ 
-                    backgroundColor: 'var(--card)', 
-                    border: '1px solid var(--border)', 
+                <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="rgba(128,128,128,0.12)" />
+                <XAxis
+                  dataKey="status"
+                  tick={{ fill: 'var(--muted-foreground)', fontSize: 11 }}
+                  axisLine={false}
+                  tickLine={false}
+                  tickFormatter={(v) => {
+                    const map = { ABERTO: 'Aberto', EM_ANDAMENTO: 'Em Andamento', RESOLVIDO: 'Resolvido' };
+                    return map[v] || v;
+                  }}
+                />
+                <YAxis
+                  tick={{ fill: 'var(--muted-foreground)', fontSize: 11 }}
+                  axisLine={false}
+                  tickLine={false}
+                  allowDecimals={false}
+                  width={28}
+                />
+                <RechartsTooltip
+                  cursor={{ fill: 'rgba(128,128,128,0.08)' }}
+                  contentStyle={{
+                    backgroundColor: 'var(--card)',
+                    border: '1px solid var(--border)',
                     borderRadius: '8px',
                     color: 'var(--foreground)',
                     fontSize: '13px'
                   }}
+                  formatter={(value, name) => [value, 'Chamados']}
+                  labelFormatter={(label) => {
+                    const map = { ABERTO: 'Aberto', EM_ANDAMENTO: 'Em Andamento', RESOLVIDO: 'Resolvido' };
+                    return map[label] || label;
+                  }}
                 />
-                <Bar dataKey="quantidade" radius={[6, 6, 0, 0]}>
+                <Bar dataKey="quantidade" radius={[8, 8, 0, 0]} maxBarSize={72}>
                   {metrics.chamadosPorStatus.map((entry, index) => (
                     <Cell key={`cell-${index}`} fill={CORES_STATUS[entry.status] || '#CBD5E1'} />
                   ))}
                 </Bar>
               </BarChart>
             </ResponsiveContainer>
+          </div>
+          {/* Legenda de cores */}
+          <div className="flex justify-center gap-6 mt-4">
+            {metrics.chamadosPorStatus.map((entry) => (
+              <div key={entry.status} className="flex items-center gap-2">
+                <div className="w-2.5 h-2.5 rounded-full" style={{ backgroundColor: CORES_STATUS[entry.status] || '#CBD5E1' }} />
+                <span className="text-xs text-muted-foreground">
+                  {{ ABERTO: 'Aberto', EM_ANDAMENTO: 'Em Andamento', RESOLVIDO: 'Resolvido' }[entry.status] || entry.status}
+                </span>
+              </div>
+            ))}
           </div>
         </div>
 
