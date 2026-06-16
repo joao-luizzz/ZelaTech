@@ -1,19 +1,34 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../../contexts/AuthContext';
 import { muralService } from '../../services/muralService';
+import { chamadoService } from '../../services/chamadoService';
+import { financeiroService } from '../../services/financeiroService';
+import { infracaoService } from '../../services/infracaoService';
+import { reservaService } from '../../services/reservaService';
 import { format, parseISO } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
-import { Bell, Calendar, Loader2, AlertCircle } from 'lucide-react';
+import { Bell, Calendar, Loader2, AlertCircle, Wrench, CreditCard, AlertTriangle, CalendarDays } from 'lucide-react';
 
 export default function DashboardMorador() {
   const [avisos, setAvisos] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const navigate = useNavigate();
+  const { user } = useAuth();
+
+  // Contagens para os scorecards
+  const [resumo, setResumo] = useState({
+    chamadosAbertos: 0,
+    faturasPendentes: 0,
+    infracoesAtivas: 0,
+    proximaReserva: null
+  });
 
   // Dispara a busca inicial de avisos assim que o componente é montado na tela. (Andrey)
   useEffect(() => {
     fetchAvisos();
+    fetchResumo();
   }, []);
 
   // Faz a requisição HTTP para a API buscando a lista de avisos atualizada.
@@ -31,16 +46,127 @@ export default function DashboardMorador() {
     }
   };
 
+  const fetchResumo = async () => {
+    const results = await Promise.allSettled([
+      chamadoService.getMeusChamados(),
+      financeiroService.listarMinhasFaturas(),
+      infracaoService.listarMinhas(),
+      reservaService.listarMinhasReservas()
+    ]);
+
+    const chamados = results[0].status === 'fulfilled' ? results[0].value : [];
+    const faturas = results[1].status === 'fulfilled' ? results[1].value : [];
+    const infracoes = results[2].status === 'fulfilled' ? results[2].value : [];
+    const reservas = results[3].status === 'fulfilled' ? results[3].value : [];
+
+    const chamadosAbertos = chamados.filter(c => c.status === 'ABERTO' || c.status === 'EM_ANDAMENTO').length;
+    const faturasPendentes = faturas.filter(f => f.status === 'PENDENTE' || f.status === 'VENCIDA').length;
+    const infracoesAtivas = infracoes.filter(i => !['RECURSO_ACEITO', 'CANCELADA'].includes(i.status)).length;
+
+    const hoje = new Date();
+    hoje.setHours(0, 0, 0, 0);
+    const reservasFuturas = reservas
+      .filter(r => {
+        const dataReserva = Array.isArray(r.dataReserva)
+          ? new Date(r.dataReserva[0], r.dataReserva[1] - 1, r.dataReserva[2])
+          : new Date(r.dataReserva);
+        return dataReserva >= hoje && r.status !== 'CANCELADA';
+      })
+      .sort((a, b) => {
+        const dA = Array.isArray(a.dataReserva) ? new Date(a.dataReserva[0], a.dataReserva[1] - 1, a.dataReserva[2]) : new Date(a.dataReserva);
+        const dB = Array.isArray(b.dataReserva) ? new Date(b.dataReserva[0], b.dataReserva[1] - 1, b.dataReserva[2]) : new Date(b.dataReserva);
+        return dA - dB;
+      });
+
+    setResumo({
+      chamadosAbertos,
+      faturasPendentes,
+      infracoesAtivas,
+      proximaReserva: reservasFuturas.length > 0 ? reservasFuturas[0] : null
+    });
+  };
+
+  const formatarDataReserva = (dataReserva) => {
+    if (Array.isArray(dataReserva)) {
+      const [ano, mes, dia] = dataReserva;
+      return new Date(ano, mes - 1, dia).toLocaleDateString('pt-BR');
+    }
+    return new Date(dataReserva).toLocaleDateString('pt-BR');
+  };
+
+  const primeiroNome = user?.nome?.split(' ')[0] || 'Morador';
+
+  const scorecards = [
+    {
+      label: 'Chamados Abertos',
+      value: resumo.chamadosAbertos,
+      icon: Wrench,
+      color: 'text-blue-500',
+      bg: 'bg-blue-500/15',
+      path: '/morador/chamados',
+      alert: resumo.chamadosAbertos > 0
+    },
+    {
+      label: 'Faturas Pendentes',
+      value: resumo.faturasPendentes,
+      icon: CreditCard,
+      color: resumo.faturasPendentes > 0 ? 'text-red-500' : 'text-green-500',
+      bg: resumo.faturasPendentes > 0 ? 'bg-red-500/15' : 'bg-green-500/15',
+      path: '/morador/financeiro',
+      alert: resumo.faturasPendentes > 0
+    },
+    {
+      label: 'Infrações Ativas',
+      value: resumo.infracoesAtivas,
+      icon: AlertTriangle,
+      color: resumo.infracoesAtivas > 0 ? 'text-orange-500' : 'text-green-500',
+      bg: resumo.infracoesAtivas > 0 ? 'bg-orange-500/15' : 'bg-green-500/15',
+      path: '/morador/infracoes',
+      alert: resumo.infracoesAtivas > 0
+    },
+    {
+      label: 'Próxima Reserva',
+      value: resumo.proximaReserva ? formatarDataReserva(resumo.proximaReserva.dataReserva) : '—',
+      icon: CalendarDays,
+      color: 'text-purple-500',
+      bg: 'bg-purple-500/15',
+      path: '/morador/reservas',
+      alert: false
+    }
+  ];
+
   return (
     <div className="space-y-6">
       {/* ── Cabeçalho da tela (Andrey) ── */}
       <div>
         <h1 className="text-3xl font-extrabold text-foreground tracking-tight">
-          Olá, Morador! 👋
+          Olá, {primeiroNome}! 👋
         </h1>
         <p className="text-muted-foreground mt-1">
           Confira os últimos avisos do condomínio e gerencie seus chamados.
         </p>
+      </div>
+
+      {/* ── Scorecards de Resumo ── */}
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+        {scorecards.map((card) => {
+          const Icon = card.icon;
+          return (
+            <button
+              key={card.label}
+              onClick={() => navigate(card.path)}
+              className="bg-card p-4 rounded-xl shadow-sm border border-border hover:border-primary/50 hover:shadow-md transition-all duration-200 flex items-center gap-4 text-left group"
+            >
+              <div className={`w-11 h-11 rounded-xl flex items-center justify-center ${card.bg} shrink-0`}>
+                <Icon size={22} className={card.color} />
+              </div>
+              <div className="min-w-0">
+                <p className="text-xs font-medium text-muted-foreground truncate">{card.label}</p>
+                <p className="text-xl font-bold text-foreground group-hover:text-primary transition-colors">{card.value}</p>
+              </div>
+            </button>
+          );
+        })}
       </div>
 
       {/* ── Botões de ação rápida (Andrey) ── */}
