@@ -147,7 +147,13 @@ export default function GestaoInfracoes() {
             <tbody>
               {infracoes.length === 0 ? (
                 <tr>
-                  <td colSpan="5" className="p-8 text-center text-muted-foreground">Nenhuma ocorrência registrada no sistema.</td>
+                  <td colSpan="5" className="p-16 text-center">
+                    <div className="flex flex-col items-center gap-3">
+                      <Gavel className="w-10 h-10 text-muted-foreground/50" />
+                      <p className="text-muted-foreground font-medium">Nenhuma ocorrência registrada</p>
+                      <p className="text-muted-foreground/70 text-sm">O condomínio está em dia! Registre uma nova ocorrência caso necessário.</p>
+                    </div>
+                  </td>
                 </tr>
               ) : (
                 infracoes.map(inf => (
