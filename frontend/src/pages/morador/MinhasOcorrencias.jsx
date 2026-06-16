@@ -8,7 +8,7 @@ export default function MinhasOcorrencias() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [infracaoSelecionada, setInfracaoSelecionada] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
-  const { addToast } = useToast();
+  const { showToast } = useToast();
 
   const [formData, setFormData] = useState({
     justificativa: '',
@@ -20,7 +20,7 @@ export default function MinhasOcorrencias() {
       const res = await infracaoService.listarMinhas();
       setInfracoes(res);
     } catch (error) {
-      addToast('Erro ao carregar suas ocorrências.', 'error');
+      showToast('Erro ao carregar suas ocorrências.', 'error');
     }
   };
 
@@ -50,12 +50,12 @@ export default function MinhasOcorrencias() {
       }
 
       await infracaoService.enviarRecurso(infracaoSelecionada.id, payload);
-      addToast('Defesa enviada com sucesso! O síndico analisará o seu caso.', 'success');
+      showToast('Defesa enviada com sucesso! O síndico analisará o seu caso.', 'success');
       setIsModalOpen(false);
       setFormData({ justificativa: '', anexoProvas: null });
       carregarDados();
     } catch (error) {
-      addToast(error.response?.data?.erro || 'Erro ao enviar defesa.', 'error');
+      showToast(error.response?.data?.erro || 'Erro ao enviar defesa.', 'error');
     } finally {
       setIsLoading(false);
     }

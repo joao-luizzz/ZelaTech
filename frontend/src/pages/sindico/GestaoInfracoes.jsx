@@ -11,7 +11,7 @@ export default function GestaoInfracoes() {
   const [isRecursoModalOpen, setIsRecursoModalOpen] = useState(false);
   const [infracaoSelecionada, setInfracaoSelecionada] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
-  const { addToast } = useToast();
+  const { showToast } = useToast();
 
   const [formData, setFormData] = useState({
     infratorId: '',
@@ -31,7 +31,7 @@ export default function GestaoInfracoes() {
       setInfracoes(resInfracoes);
       setMoradores(resMoradores.data);
     } catch (error) {
-      addToast('Erro ao carregar os dados.', 'error');
+      showToast('Erro ao carregar os dados.', 'error');
     }
   };
 
@@ -62,14 +62,14 @@ export default function GestaoInfracoes() {
       });
 
       await infracaoService.registrarInfracao(payload);
-      addToast('Infração registrada com sucesso!', 'success');
+      showToast('Infração registrada com sucesso!', 'success');
       setIsModalOpen(false);
       setFormData({
         infratorId: '', tipo: 'BARULHO', gravidade: 'LEVE', descricao: '', valorMulta: '', fotoEvidencia: null
       });
       carregarDados();
     } catch (error) {
-      addToast(error.response?.data?.erro || 'Erro ao registrar.', 'error');
+      showToast(error.response?.data?.erro || 'Erro ao registrar.', 'error');
     } finally {
       setIsLoading(false);
     }
@@ -78,11 +78,11 @@ export default function GestaoInfracoes() {
   const handleJulgarRecurso = async (aceitar) => {
     try {
       await infracaoService.julgarRecurso(infracaoSelecionada.id, aceitar);
-      addToast(aceitar ? 'Recurso aceito! Infração cancelada/abonada.' : 'Recurso negado! Penalidade mantida.', 'success');
+      showToast(aceitar ? 'Recurso aceito! Infração cancelada/abonada.' : 'Recurso negado! Penalidade mantida.', 'success');
       setIsRecursoModalOpen(false);
       carregarDados();
     } catch (error) {
-      addToast('Erro ao julgar recurso.', 'error');
+      showToast('Erro ao julgar recurso.', 'error');
     }
   };
 
@@ -90,10 +90,10 @@ export default function GestaoInfracoes() {
     if (window.confirm('Tem certeza que deseja cancelar esta infração?')) {
       try {
         await infracaoService.cancelarInfracao(id);
-        addToast('Infração cancelada.', 'success');
+        showToast('Infração cancelada.', 'success');
         carregarDados();
       } catch (error) {
-        addToast('Erro ao cancelar.', 'error');
+        showToast('Erro ao cancelar.', 'error');
       }
     }
   };
