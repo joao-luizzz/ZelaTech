@@ -125,8 +125,12 @@ export default function FinanceiroSindico() {
             <tbody className="divide-y divide-border">
               {faturas.length === 0 ? (
                 <tr>
-                  <td colSpan="5" className="px-6 py-8 text-center text-muted-foreground">
-                    Nenhuma fatura encontrada.
+                  <td colSpan="5" className="px-6 py-16 text-center">
+                    <div className="flex flex-col items-center gap-3">
+                      <CreditCard className="w-10 h-10 text-muted-foreground/50" />
+                      <p className="text-muted-foreground font-medium">Nenhuma fatura gerada</p>
+                      <p className="text-muted-foreground/70 text-sm">Clique em "Gerar Fatura Manual" para criar a primeira cobrança.</p>
+                    </div>
                   </td>
                 </tr>
               ) : (
