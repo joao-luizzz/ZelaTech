@@ -150,5 +150,5 @@ Crie um schema no seu MySQL com o nome `zelatech_db` e execute o script contido 
 
 ---
 <p align="center">
-  <sub>ZelaTech - Desenvolvido com carinho para a disciplina de Programação Orientada a Objetos. FATEC PG, 2026.</sub>
+  <sub>ZelaTech - FATEC PG, 2026.</sub>
 </p>
